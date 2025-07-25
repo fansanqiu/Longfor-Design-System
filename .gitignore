@@ -38,7 +38,7 @@ yarn-error.log*
 /data.json
 /pnpm-lock.yaml
 .idea
-.vscode
+
 
 
 # sitemap
