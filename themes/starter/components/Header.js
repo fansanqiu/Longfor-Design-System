@@ -55,31 +55,27 @@ export const Header = props => {
   return (
     <>
       {/* <!-- ====== Navbar Section Start --> */}
-      <div className='ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent'>
+      <div className='ud-header absolute z-40 flex w-full items-center bg-transparent'>
         <div className='container'>
-          <div className='relative -mx-4 flex items-center justify-between'>
+          <div className='relative flex items-center justify-between'>
             {/* Logo */}
             <Logo {...props} />
 
-            <div className='flex w-full items-center justify-between px-4'>
-                {/* 右侧内容区 - 合并菜单和导航链接 */}
-                <div className='flex items-center gap-8 justify-end pr-16 lg:pr-0'>
-                  {/* 原中间菜单 */}
-                  <MenuList {...props} customMenu={siteConfig('STARTER_MENU_LINKS')} />
-                  
-                  {/* 新导航链接 */}
-                  <div className='flex items-center gap-6'>
-                    {siteConfig('STARTER_NAV_LINKS', []).map((link, index) => (
-                      <Link
-                        key={index}
-                        href={link.url}
-                        className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>
-                        {link.text}
-                      </Link>
-                    ))}
-                  </div>
+            <div className='flex w-fit px-4'>
+              {/* 右侧内容区 - 合并菜单和导航链接 */}
+              <div className='flex items-center gap-8 w-fit pr-16 lg:pr-0'>
+                {/* 原中间菜单 */}
+                <div className='lg:hidden w-fit'><MenuList {...props} customMenu={[{ href: '/design', name: '设计' }, { href: '/components', name: '组件' }, { href: '/resources', name: '资源' }, { href: '/mockup', name: 'Mock Up体验' }]} /></div>
+
+                {/* 新导航链接 */}
+                <div className='hidden lg:flex items-center gap-6'>
+                  <Link href="/design" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>设计</Link>
+                  <Link href="/components" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>组件</Link>
+                  <Link href="/resources" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>资源</Link>
+                  <Link href="/mockup" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>Mock Up体验</Link>
                 </div>
               </div>
+            </div>
           </div>
         </div>
       </div>

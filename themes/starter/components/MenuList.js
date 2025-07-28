@@ -46,10 +46,10 @@ export const MenuList = props => {
     links = customNav.concat(links)
   }
 
-  // 如果 开启自定义菜单，则覆盖Page生成的菜单
-  if (siteConfig('CUSTOM_MENU', BLOG.CUSTOM_MENU)) {
-    links = customMenu
-  }
+  // 优先使用传入的customMenu，否则根据配置决定
+if (customMenu || siteConfig('CUSTOM_MENU', BLOG.CUSTOM_MENU)) {
+  links = customMenu || siteConfig('STARTER_MENU_LINKS') || []
+}
 
   const toggleMenu = () => {
     setShowMenu(!showMenu) // 切换菜单状态
