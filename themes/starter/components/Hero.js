@@ -9,6 +9,17 @@ import Link from 'next/link'
  */
 export const Hero = props => {
   const config = props?.NOTION_CONFIG || CONFIG
+  const heroTitle1 = siteConfig('STARTER_HERO_TITLE_1', null, config)
+  const heroTitle2 = siteConfig('STARTER_HERO_TITLE_2', null, config)
+  const heroDescription = siteConfig('STARTER_HERO_DESCRIPTION', null, config)
+  const button1Text = siteConfig('STARTER_HERO_BUTTON_1_TEXT', null, config)
+  const button1Url = siteConfig('STARTER_HERO_BUTTON_1_URL', '', config)
+  const button2Text = siteConfig('STARTER_HERO_BUTTON_2_TEXT', null, config)
+  const button2Url = siteConfig('STARTER_HERO_BUTTON_2_URL', null, config)
+  const button2Icon = siteConfig('STARTER_HERO_BUTTON_2_ICON', null, config)
+  const previewImage = siteConfig('STARTER_HERO_PREVIEW_IMAGE', null, config)
+  const bannerImage = siteConfig('STARTER_HERO_BANNER_IMAGE', null, config)
+  const siteTitle = siteConfig('TITLE', null, config)
   return (
     <>
       {/* <!-- ====== Hero Section Start --> */}
@@ -23,53 +34,41 @@ export const Hero = props => {
                 data-wow-delay='.2s'>
                 {/* 主标题 */}
                 <h1 className='mb-6 text-3xl font-bold leading-snug text-white sm:text-4xl sm:leading-snug lg:text-5xl lg:leading-[1.2]'>
-                  {siteConfig('STARTER_HERO_TITLE_1', null, config)}
+                  {heroTitle1}
                 </h1>
                 {/* 次标题 */}
                 <p className='mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]'>
-                  {siteConfig('STARTER_HERO_TITLE_2', null, config)}
+                  {heroTitle2}
                 </p>
                 {/* 描述字段 */}
                 <p className='mx-auto mb-9 max-w-[600px] text-base font-normal text-white'>
-                  {siteConfig('STARTER_HERO_DESCRIPTION', null, config)}
+                  {heroDescription}
                 </p>
                 {/* 按钮组 */}
                 <ul className='mb-10 flex flex-wrap items-center justify-center gap-5'>
-                  {siteConfig('STARTER_HERO_BUTTON_1_TEXT', null, config) && (
+                  {button1Text && (
                     <li>
                       <Link
-                        href={siteConfig('STARTER_HERO_BUTTON_1_URL', '')}
+                        href={button1Url}
                         className='inline-flex items-center justify-center rounded-md bg-white px-7 py-[14px] text-center text-base font-medium text-dark shadow-1 transition duration-300 ease-in-out hover:bg-gray-2 hover:text-body-color'>
-                        {siteConfig('STARTER_HERO_BUTTON_1_TEXT', null, config)}
+                        {button1Text}
                       </Link>
                     </li>
                   )}
-                  {siteConfig('STARTER_HERO_BUTTON_2_TEXT', null, config) && (
+                  {button2Text && (
                     <li>
                       <Link
-                        href={siteConfig(
-                          'STARTER_HERO_BUTTON_2_URL',
-                          null,
-                          config
-                        )}
+                        href={button2Url}
                         target='_blank'
                         className='flex items-center rounded-md bg-white/[0.12] px-6 py-[14px] text-base font-medium text-white transition duration-300 ease-in-out hover:bg-white hover:text-dark'
                         rel='noreferrer'>
-                        {siteConfig(
-                          'STARTER_HERO_BUTTON_2_ICON',
-                          null,
-                          config
-                        ) && (
+                        {button2Icon && (
                           <img
                             className='mr-4'
-                            src={siteConfig(
-                              'STARTER_HERO_BUTTON_2_ICON',
-                              null,
-                              config
-                            )}
+                            src={button2Icon}
                           />
                         )}
-                        {siteConfig('STARTER_HERO_BUTTON_2_TEXT', null, config)}
+                        {button2Text}
                       </Link>
                     </li>
                   )}
@@ -86,13 +85,9 @@ export const Hero = props => {
                   <div className='mt-16'>
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img
-                      src={siteConfig(
-                        'STARTER_HERO_PREVIEW_IMAGE',
-                        null,
-                        config
-                      )}
-                      alt={siteConfig('TITLE', null, config)}
-                      title={siteConfig('TITLE', null, config)}
+                      src={previewImage}
+                      alt={siteTitle}
+                      title={siteTitle}
                       className='mx-auto max-w-full rounded-t-xl rounded-tr-xl'
                     />
                   </div>
@@ -116,11 +111,7 @@ export const Hero = props => {
           <LazyImage
             priority
             className='w-full'
-            src={siteConfig(
-              'STARTER_HERO_BANNER_IMAGE',
-              null,
-              config
-            )}></LazyImage>
+            src={bannerImage}></LazyImage>
         </div>
       )}
       {/* <!-- ====== Hero Section End --> */}
