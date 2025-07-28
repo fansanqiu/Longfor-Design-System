@@ -7,7 +7,7 @@ import throttle from 'lodash.throttle'
 import Link from 'next/link'
 import { useRouter } from 'next/router'
 import { useCallback, useEffect, useState } from 'react'
-import { DarkModeButton } from './DarkModeButton'
+
 import { Logo } from './Logo'
 import { MenuList } from './MenuList'
 
@@ -62,52 +62,24 @@ export const Header = props => {
             <Logo {...props} />
 
             <div className='flex w-full items-center justify-between px-4'>
-              {/* 中间菜单 */}
-              <MenuList {...props} />
-
-              {/* 右侧功能 */}
-              <div className='flex items-center gap-4 justify-end pr-16 lg:pr-0'>
-                {/* 深色模式切换 */}
-                <DarkModeButton />
-                {/* 注册登录功能 */}
-                {enableClerk && (
-                  <>
-                    <SignedOut>
-                      <div className='hidden sm:flex gap-4'>
-                        <Link
-                          href={siteConfig('STARTER_NAV_BUTTON_1_URL', '')}
-                          className={`loginBtn ${buttonTextColor} p-2 text-base font-medium hover:opacity-70`}>
-                          {siteConfig('STARTER_NAV_BUTTON_1_TEXT')}
-                        </Link>
-                        <Link
-                          href={siteConfig('STARTER_NAV_BUTTON_2_URL', '')}
-                          className={`signUpBtn ${buttonTextColor} p-2 rounded-md bg-white bg-opacity-20 py-2 text-base font-medium duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark`}>
-                          {siteConfig('STARTER_NAV_BUTTON_2_TEXT')}
-                        </Link>
-                      </div>
-                    </SignedOut>
-                    <SignedIn>
-                      <UserButton />
-                      <DashboardButton className={'hidden md:block'} />
-                    </SignedIn>
-                  </>
-                )}
-                {!enableClerk && (
-                  <div className='hidden sm:flex gap-4'>
-                    <Link
-                      href={siteConfig('STARTER_NAV_BUTTON_1_URL', '')}
-                      className={`loginBtn ${buttonTextColor} p-2 text-base font-medium hover:opacity-70`}>
-                      {siteConfig('STARTER_NAV_BUTTON_1_TEXT')}
-                    </Link>
-                    <Link
-                      href={siteConfig('STARTER_NAV_BUTTON_2_URL', '')}
-                      className={`signUpBtn ${buttonTextColor} p-2 rounded-md bg-white bg-opacity-20 py-2 text-base font-medium duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark`}>
-                      {siteConfig('STARTER_NAV_BUTTON_2_TEXT')}
-                    </Link>
+                {/* 右侧内容区 - 合并菜单和导航链接 */}
+                <div className='flex items-center gap-8 justify-end pr-16 lg:pr-0'>
+                  {/* 原中间菜单 */}
+                  <MenuList {...props} customMenu={siteConfig('STARTER_MENU_LINKS')} />
+                  
+                  {/* 新导航链接 */}
+                  <div className='flex items-center gap-6'>
+                    {siteConfig('STARTER_NAV_LINKS', []).map((link, index) => (
+                      <Link
+                        key={index}
+                        href={link.url}
+                        className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>
+                        {link.text}
+                      </Link>
+                    ))}
                   </div>
-                )}
+                </div>
               </div>
-            </div>
           </div>
         </div>
       </div>

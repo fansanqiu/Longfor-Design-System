@@ -10,9 +10,9 @@
     "**/node_modules": true,
     "**/dist": true,
     "**/*.log": true,
-    ".github":true,
-    "docs":true,
-    ".dockerignore":true,
+    ".github": true,
+    "docs": true,
+    ".dockerignore": true,
     "**/.env.example": true,
     "**/.eslintrc.js": true,
     "**/.gitignore": true,
@@ -51,6 +51,9 @@
     "**/tsconfig.eslint.json": true,
     "**/tsconfig.json": true,
     "**/vercel.json": true,
-    "**/yarn.lock": true
+    "**/yarn.lock": true,
+    ".next": true,
+    "public/images/heo": true,
+    // "public/images/starter": true,
   }
 }

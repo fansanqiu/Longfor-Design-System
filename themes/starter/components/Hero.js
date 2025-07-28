@@ -14,7 +14,7 @@ export const Hero = props => {
       {/* <!-- ====== Hero Section Start --> */}
       <div
         id='home'
-        className='relative overflow-hidden bg-primary pt-[120px] md:pt-[130px] lg:pt-[160px]'>
+        className='relative overflow-hidden bg-primary pt-[120px] pb-[80px] md:pt-[130px] lg:pt-[160px]'>
         <div className='container'>
           <div className='-mx-4 flex flex-wrap items-center'>
             <div className='w-full px-4'>
@@ -28,6 +28,10 @@ export const Hero = props => {
                 {/* 次标题 */}
                 <p className='mx-auto mb-9 max-w-[600px] text-base font-medium text-white sm:text-lg sm:leading-[1.44]'>
                   {siteConfig('STARTER_HERO_TITLE_2', null, config)}
+                </p>
+                {/* 描述字段 */}
+                <p className='mx-auto mb-9 max-w-[600px] text-base font-normal text-white'>
+                  {siteConfig('STARTER_HERO_DESCRIPTION', null, config)}
                 </p>
                 {/* 按钮组 */}
                 <ul className='mb-10 flex flex-wrap items-center justify-center gap-5'>

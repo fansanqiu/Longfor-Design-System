@@ -21,6 +21,7 @@ import { Hero } from './components/Hero'
 import { Pricing } from './components/Pricing'
 import { Team } from './components/Team'
 import { Testimonials } from './components/Testimonials'
+import { AfterHero } from './components/AfterHero'
 import CONFIG from './config'
 import { Style } from './style'
 // import { MadeWithButton } from './components/MadeWithButton'
@@ -108,6 +109,8 @@ const LayoutIndex = props => {
     <>
       {/* 英雄区 */}
       {siteConfig('STARTER_HERO_ENABLE', true, CONFIG) && <Hero {...props} />}
+      {/* AfterHero组件 */}
+      {siteConfig('STARTER_AFTER_HERO_ENABLE', false, CONFIG) && <AfterHero images={posts} />}
       {/* 合作伙伴 */}
       {siteConfig('STARTER_BRANDS_ENABLE', true, CONFIG) && <Brand />}
       {/* 产品特性 */}
