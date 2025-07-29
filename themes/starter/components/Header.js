@@ -46,8 +46,18 @@ export const Header = props => {
       // 控制台输出当前滚动位置和 sticky 值
       if (scrollY > 0) {
         ud_header?.classList?.add('sticky')
+        ud_header?.classList?.add('h-21') // 84px = 21 * 4
+        // 滚动时将按钮颜色设为黑色
+        setColor('text-black')
       } else {
         ud_header?.classList?.remove('sticky')
+        ud_header?.classList?.remove('h-21')
+        // 未滚动时恢复原始颜色
+        if (isDarkMode || router.route === '/') {
+          setColor('text-white')
+        } else {
+          setColor('')
+        }
       }
     }, throttleMs)
   )
@@ -55,10 +65,10 @@ export const Header = props => {
   return (
     <>
       {/* <!-- ====== Navbar Section Start --> */}
-      <div className='ud-header absolute z-40 flex w-full items-center bg-transparent'>
+      <div className='ud-header h-21 absolute z-40 flex w-full items-center bg-transparent'>
         <div className='container'>
           <div className='relative flex items-center justify-between'>
-            {/* Logo */}
+            {/* 网站Logo - 点击跳转到首页 */}
             <Logo {...props} />
 
             <div className='flex w-fit px-4'>

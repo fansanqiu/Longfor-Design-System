@@ -2,9 +2,7 @@
  * 另一个落地页主题
  */
 const CONFIG = {
-  // 默认只展示Logo文字，如果设置了logo图片，会在文字左侧显示图标
-  STARTER_LOGO: '/images/longfor/logo.png', // 普通logo图片 示例：/images/starter/logo/logo.svg
-  STARTER_LOGO_WHITE: '', // 透明底浅色logo 示例： /images/starter/logo/logo-white.svg
+  // 默认读取public下的favicon.ico作为站点图标
 
   // MENU ， 自定义导航菜单
   CUSTOM_MENU: true,

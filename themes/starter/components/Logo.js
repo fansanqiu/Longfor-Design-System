@@ -2,64 +2,60 @@
 /* eslint-disable @next/next/no-html-link-for-pages */
 import LazyImage from '@/components/LazyImage'
 import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import throttle from 'lodash.throttle'
 import { useRouter } from 'next/router'
+import throttle from 'lodash.throttle'
 import { useEffect, useState } from 'react'
 
 /**
- * 站点图标
- * @returns
+ * 站点Logo组件
+ * 包含图标和文字，支持滚动时文字颜色变化效果
+ * @param {Object} props - 组件属性
+ * @param {boolean} props.white - 是否使用白色主题
+ * @param {Object} props.NOTION_CONFIG - Notion配置
+ * @returns {JSX.Element} Logo组件
  */
-export const Logo = props => {
-  const { white, NOTION_CONFIG } = props
+
+export const Logo = ({ white, NOTION_CONFIG }) => {
   const router = useRouter()
-  const logoWhite = siteConfig('STARTER_LOGO_WHITE')
-  const logoNormal = siteConfig('STARTER_LOGO')
-  const { isDarkMode } = useGlobal()
-  const [logo, setLogo] = useState(logoWhite)
+  
+  // 默认使用public目录下的favicon.ico作为站点图标
+  const siteLogo = '/favicon.ico'
+  
+  // Logo文字颜色状态：滚动前为白色，滚动后为黑色
   const [logoTextColor, setLogoTextColor] = useState('text-white')
 
+  // 监听滚动事件，实现滚动时文字颜色变化效果
   useEffect(() => {
-    // 滚动监听
-    const throttleMs = 200
-    const navBarScrollListener = throttle(() => {
-      const scrollY = window.scrollY
-      // 何时显示浅色或白底的logo
-      const homePageNavBar = router.route === '/' && scrollY < 10 // 在首页并且视窗在页面顶部
+    // 使用节流函数优化滚动性能，每200ms最多执行一次
+    const handleScroll = throttle(() => {
+      // 判断滚动位置，设置对应的文字颜色
+      const newTextColor = window.scrollY > 0 ? 'text-black' : 'text-white'
+      setLogoTextColor(newTextColor)
+    }, 200)
 
-      if (white || isDarkMode || homePageNavBar) {
-        setLogo(logoWhite)
-        setLogoTextColor('text-white')
-      } else {
-        setLogo(logoNormal)
-        setLogoTextColor('text-black')
-      }
-    }, throttleMs)
-
-    navBarScrollListener()
-    window.addEventListener('scroll', navBarScrollListener)
-    return () => {
-      window.removeEventListener('scroll', navBarScrollListener)
-    }
-  }, [isDarkMode, router])
+    // 添加滚动事件监听器
+    window.addEventListener('scroll', handleScroll)
+    
+    // 组件卸载时移除事件监听器
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   return (
     <div className='w-60 max-w-full px-4'>
       <div className='navbar-logo flex items-center w-full py-5 cursor-pointer'>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        {logo && (
+        {siteLogo && (
           <LazyImage
             priority
             onClick={() => {
               router.push('/')
             }}
-            src={logo}
+            src={siteLogo}
             alt='logo'
-            className='header-logo mr-1 h-8'
+            className='header-logo mr-1 h-8 '
           />
         )}
-        {/* logo文字 */}
+        {/* Logo文字部分 - 点击可跳转到首页 */}
         <span
           onClick={() => {
             router.push('/')
