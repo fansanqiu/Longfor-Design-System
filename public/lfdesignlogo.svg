@@ -1,0 +1,14 @@
+<svg width="33" height="32" viewBox="0 0 33 32" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+<g id="ICON_inner" data-figma-trr="r3u1.6-0f">
+<rect width="13.6573" height="6.82863" rx="0.891562" transform="matrix(0.866025 0.5 -0.866025 0.5 13.542 2.68417)" fill="url(#paint0_linear_1838_362)" style=""/>
+</g>
+<use xlink:href="#ICON_inner" transform="translate(37.8567 10.1434) rotate(120)"/>
+<use xlink:href="#ICON_inner" transform="translate(10.1439 37.8566) rotate(-120)"/>
+<defs>
+<linearGradient id="paint0_linear_1838_362" x1="-1.01408" y1="-0.693748" x2="14.955" y2="-0.787905" gradientUnits="userSpaceOnUse">
+<stop stop-color="#285CFF" style="stop-color:#285CFF;stop-color:color(display-p3 0.1569 0.3608 1.0000);stop-opacity:1;"/>
+<stop offset="0.451923" stop-color="#4BBFEE" style="stop-color:#4BBFEE;stop-color:color(display-p3 0.2941 0.7490 0.9333);stop-opacity:1;"/>
+<stop offset="1" stop-color="#53E796" style="stop-color:#53E796;stop-color:color(display-p3 0.3255 0.9059 0.5867);stop-opacity:1;"/>
+</linearGradient>
+</defs>
+</svg>

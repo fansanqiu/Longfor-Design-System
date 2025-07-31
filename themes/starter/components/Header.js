@@ -1,95 +1,38 @@
+// 禁用 eslint 的 no-unreachable 规则，因为文件中可能存在不可达代码
 /* eslint-disable no-unreachable */
-import DashboardButton from '@/components/ui/dashboard/DashboardButton'
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import throttle from 'lodash.throttle'
 import Link from 'next/link'
+// 导入 Next.js 的 useRouter 钩子，用于访问路由信息
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
-
+// 导入本地 Logo 组件
 import { Logo } from './Logo'
-import { MenuList } from './MenuList'
 
 /**
  * 顶部导航栏
  */
 export const Header = props => {
+  // 使用 useRouter 钩子获取当前路由信息
   const router = useRouter()
-  const { isDarkMode } = useGlobal()
-  const [buttonTextColor, setColor] = useState(
-    router.route === '/' ? 'text-white' : ''
-  )
 
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  useEffect(() => {
-    if (isDarkMode || router.route === '/') {
-      setColor('text-white')
-    } else {
-      setColor('')
-    }
-    // ======= Sticky
-    window.addEventListener('scroll', navBarScollListener)
-    return () => {
-      window.removeEventListener('scroll', navBarScollListener)
-    }
-  }, [isDarkMode])
-
-  // 滚动监听
-  const throttleMs = 200
-  const navBarScollListener = useCallback(
-    throttle(() => {
-      // eslint-disable-next-line camelcase
-      const ud_header = document.querySelector('.ud-header')
-      const scrollY = window.scrollY
-      // 控制台输出当前滚动位置和 sticky 值
-      if (scrollY > 0) {
-        ud_header?.classList?.add('sticky')
-        ud_header?.classList?.add('h-21') // 84px = 21 * 4
-        // 滚动时将按钮颜色设为黑色
-        setColor('text-black')
-      } else {
-        ud_header?.classList?.remove('sticky')
-        ud_header?.classList?.remove('h-21')
-        // 未滚动时恢复原始颜色
-        if (isDarkMode || router.route === '/') {
-          setColor('text-white')
-        } else {
-          setColor('')
-        }
-      }
-    }, throttleMs)
-  )
-
+  // 返回 JSX 元素
   return (
     <>
-      {/* <!-- ====== Navbar Section Start --> */}
-      <div className='ud-header h-21 absolute z-40 flex w-full items-center bg-transparent'>
-        <div className='container'>
-          <div className='relative flex items-center justify-between'>
-            {/* 网站Logo - 点击跳转到首页 */}
-            <Logo {...props} />
+      {/* 导航栏 */}
+      <div className='flex flex-col justify-center items-center gap-1 p-10 bg-transparent'>
+        <div className='flex h-16 items-center gap-7 border [background:linear-gradient(95deg,rgba(235,237,240,0.85)_9.65%,rgba(233,236,238,0.81)_58.96%,rgba(254,254,255,0.87)_86.15%)] shadow-[0_20px_30px_0_rgba(77,90,108,0.12)] backdrop-blur-[7.5px] px-10 py-[9px] rounded-[100px] border-solid border-white w-fit'>
+          {/* logo */}
+          <Logo />
+          {/* 其它页面 */}
+          <div className='flex items-center gap-5'>
+            <Link href="/design" target="_blank" rel="noopener noreferrer" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>设计</Link>
 
-            <div className='flex w-fit px-4'>
-              {/* 右侧内容区 - 合并菜单和导航链接 */}
-              <div className='flex items-center gap-8 w-fit pr-16 lg:pr-0'>
-                {/* 原中间菜单 */}
-                <div className='lg:hidden w-fit'><MenuList {...props} customMenu={[{ href: '/design', name: '设计' }, { href: '/components', name: '组件' }, { href: '/resources', name: '资源' }, { href: '/mockup', name: 'Mock Up体验' }]} /></div>
+            <Link href="/components" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>组件</Link>
 
-                {/* 新导航链接 */}
-                <div className='hidden lg:flex items-center gap-6'>
-                  <Link href="/design" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>设计</Link>
-                  <Link href="/components" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>组件</Link>
-                  <Link href="/resources" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>资源</Link>
-                  <Link href="/mockup" className={`${buttonTextColor} text-base font-medium hover:opacity-70`}>Mock Up体验</Link>
-                </div>
-              </div>
-            </div>
+            <Link href="/resources" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>资源</Link>
+
+            <Link href="/mockup" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>体验</Link>
           </div>
         </div>
       </div>
-      {/* <!-- ====== Navbar Section End --> */}
     </>
   )
 }
