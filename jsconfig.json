@@ -12,7 +12,8 @@
       "@/theme/*": ["theme/*"],
       "@/data/*": ["data/*"],
       "@/lib/*": ["lib/*"],
-      "@/styles/*": ["styles/*"]
+      "@/styles/*": ["styles/*"],
+      "@theme-components": ["themes/starter/index.js"]
     }
   }
 }

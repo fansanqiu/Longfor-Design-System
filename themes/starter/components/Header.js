@@ -1,117 +1,38 @@
+// 禁用 eslint 的 no-unreachable 规则，因为文件中可能存在不可达代码
 /* eslint-disable no-unreachable */
-import DashboardButton from '@/components/ui/dashboard/DashboardButton'
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import { SignedIn, SignedOut, UserButton } from '@clerk/nextjs'
-import throttle from 'lodash.throttle'
 import Link from 'next/link'
+// 导入 Next.js 的 useRouter 钩子，用于访问路由信息
 import { useRouter } from 'next/router'
-import { useCallback, useEffect, useState } from 'react'
-import { DarkModeButton } from './DarkModeButton'
+// 导入本地 Logo 组件
 import { Logo } from './Logo'
-import { MenuList } from './MenuList'
 
 /**
  * 顶部导航栏
  */
 export const Header = props => {
+  // 使用 useRouter 钩子获取当前路由信息
   const router = useRouter()
-  const { isDarkMode } = useGlobal()
-  const [buttonTextColor, setColor] = useState(
-    router.route === '/' ? 'text-white' : ''
-  )
 
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  useEffect(() => {
-    if (isDarkMode || router.route === '/') {
-      setColor('text-white')
-    } else {
-      setColor('')
-    }
-    // ======= Sticky
-    window.addEventListener('scroll', navBarScollListener)
-    return () => {
-      window.removeEventListener('scroll', navBarScollListener)
-    }
-  }, [isDarkMode])
-
-  // 滚动监听
-  const throttleMs = 200
-  const navBarScollListener = useCallback(
-    throttle(() => {
-      // eslint-disable-next-line camelcase
-      const ud_header = document.querySelector('.ud-header')
-      const scrollY = window.scrollY
-      // 控制台输出当前滚动位置和 sticky 值
-      if (scrollY > 0) {
-        ud_header?.classList?.add('sticky')
-      } else {
-        ud_header?.classList?.remove('sticky')
-      }
-    }, throttleMs)
-  )
-
+  // 返回 JSX 元素
   return (
     <>
-      {/* <!-- ====== Navbar Section Start --> */}
-      <div className='ud-header absolute left-0 top-0 z-40 flex w-full items-center bg-transparent'>
-        <div className='container'>
-          <div className='relative -mx-4 flex items-center justify-between'>
-            {/* Logo */}
-            <Logo {...props} />
+      {/* 导航栏 */}
+      <div className='flex flex-col justify-center items-center gap-1 p-10 bg-transparent'>
+        <div className='flex h-16 items-center gap-7 border [background:linear-gradient(95deg,rgba(235,237,240,0.85)_9.65%,rgba(233,236,238,0.81)_58.96%,rgba(254,254,255,0.87)_86.15%)] shadow-[0_20px_30px_0_rgba(77,90,108,0.12)] backdrop-blur-[7.5px] px-10 py-[9px] rounded-[100px] border-solid border-white w-fit'>
+          {/* logo */}
+          <Logo />
+          {/* 其它页面 */}
+          <div className='flex items-center gap-5'>
+            <Link href="/design" target="_blank" rel="noopener noreferrer" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>设计</Link>
 
-            <div className='flex w-full items-center justify-between px-4'>
-              {/* 中间菜单 */}
-              <MenuList {...props} />
+            <Link href="/components" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>组件</Link>
 
-              {/* 右侧功能 */}
-              <div className='flex items-center gap-4 justify-end pr-16 lg:pr-0'>
-                {/* 深色模式切换 */}
-                <DarkModeButton />
-                {/* 注册登录功能 */}
-                {enableClerk && (
-                  <>
-                    <SignedOut>
-                      <div className='hidden sm:flex gap-4'>
-                        <Link
-                          href={siteConfig('STARTER_NAV_BUTTON_1_URL', '')}
-                          className={`loginBtn ${buttonTextColor} p-2 text-base font-medium hover:opacity-70`}>
-                          {siteConfig('STARTER_NAV_BUTTON_1_TEXT')}
-                        </Link>
-                        <Link
-                          href={siteConfig('STARTER_NAV_BUTTON_2_URL', '')}
-                          className={`signUpBtn ${buttonTextColor} p-2 rounded-md bg-white bg-opacity-20 py-2 text-base font-medium duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark`}>
-                          {siteConfig('STARTER_NAV_BUTTON_2_TEXT')}
-                        </Link>
-                      </div>
-                    </SignedOut>
-                    <SignedIn>
-                      <UserButton />
-                      <DashboardButton className={'hidden md:block'} />
-                    </SignedIn>
-                  </>
-                )}
-                {!enableClerk && (
-                  <div className='hidden sm:flex gap-4'>
-                    <Link
-                      href={siteConfig('STARTER_NAV_BUTTON_1_URL', '')}
-                      className={`loginBtn ${buttonTextColor} p-2 text-base font-medium hover:opacity-70`}>
-                      {siteConfig('STARTER_NAV_BUTTON_1_TEXT')}
-                    </Link>
-                    <Link
-                      href={siteConfig('STARTER_NAV_BUTTON_2_URL', '')}
-                      className={`signUpBtn ${buttonTextColor} p-2 rounded-md bg-white bg-opacity-20 py-2 text-base font-medium duration-300 ease-in-out hover:bg-opacity-100 hover:text-dark`}>
-                      {siteConfig('STARTER_NAV_BUTTON_2_TEXT')}
-                    </Link>
-                  </div>
-                )}
-              </div>
-            </div>
+            <Link href="/resources" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>资源</Link>
+
+            <Link href="/mockup" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>体验</Link>
           </div>
         </div>
       </div>
-      {/* <!-- ====== Navbar Section End --> */}
     </>
   )
 }
