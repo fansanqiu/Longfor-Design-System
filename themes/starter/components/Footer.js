@@ -1,5 +1,5 @@
 import { siteConfig } from '@/lib/config'
-import SocialButton from '../archive/SocialButton'
+// import SocialButton from '../archive/SocialButton'
 import { Logo } from './Logo'
 import { SVGFooterCircleBG } from './svg/SVGFooterCircleBG'
 import Link from 'next/link'
@@ -30,7 +30,7 @@ export const Footer = props => {
                   </p>
                   <div className='-mx-3 flex items-center'>
                     <div className='mx-3'>
-                      <SocialButton />
+                      {/* <SocialButton /> */}
                     </div>
                   </div>
                 </div>

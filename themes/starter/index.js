@@ -65,15 +65,8 @@ const LayoutBase = props => {
       <div id='main-wrapper' className='grow'>
         {children}
       </div>
-
-      {/* 页脚 */}
-
-      {isLiteMode ? <></> : <Footer {...props} />}
-
       {/* 悬浮按钮 */}
       {isLiteMode ? <></> : <BackToTopButton />}
-
-      {/* <MadeWithButton/> */}
     </div>
   )
 }
