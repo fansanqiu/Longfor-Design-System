@@ -9,24 +9,19 @@ import { isBrowser } from '@/lib/utils'
 import { useRouter } from 'next/router'
 import { useEffect } from 'react'
 import { BackToTopButton } from './components/BackToTopButton'
-import { Blog } from './components/Blog'
 import { Footer } from './components/Footer'
 import { Header } from './components/Header'
 import CONFIG from './config'
 import { Style } from './style'
-// import { MadeWithButton } from './components/MadeWithButton'
 import Comment from '@/components/Comment'
-import replaceSearchResult from '@/components/Mark'
 import ShareBar from '@/components/ShareBar'
 import { useGlobal } from '@/lib/global'
 import { loadWowJS } from '@/lib/plugins/wow'
 import Link from 'next/link'
-import { ArticleLock } from './components/ArticleLock'
+// import { ArticleLock } from './components/ArticleLock'
 import { Banner } from './components/Banner'
-import SearchInput from './components/SearchInput'
 import { SVG404 } from './components/svg/SVG404'
 import { Home } from './components/Home'
-import { Design } from './components/Design'
 import { LayoutDesign as CustomLayoutDesign } from './components/LayoutDesign'
 
 /**
@@ -134,15 +129,15 @@ const LayoutSlug = props => {
       <div className='container grow'>
         <div className='flex flex-wrap justify-center -mx-4'>
           <div id='container-inner' className='w-full p-4'>
-            {lock && <ArticleLock validPassword={validPassword} />}
+            {/* {lock && <ArticleLock validPassword={validPassword} />} */}
 
-            {!lock && post && (
+            {/* {!lock && post && (
               <div id='article-wrapper' className='mx-auto'>
                 <NotionPage {...props} />
                 <Comment frontMatter={post} />
                 <ShareBar post={post} />
               </div>
-            )}
+            )} */}
           </div>
         </div>
       </div>
