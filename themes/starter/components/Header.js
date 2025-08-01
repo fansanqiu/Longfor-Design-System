@@ -3,8 +3,6 @@
 import Link from 'next/link'
 // 导入 Next.js 的 useRouter 钩子，用于访问路由信息
 import { useRouter } from 'next/router'
-// 导入本地 Logo 组件
-import { Logo } from './Logo'
 
 /**
  * 顶部导航栏
@@ -17,10 +15,27 @@ export const Header = props => {
   return (
     <>
       {/* 导航栏 */}
-      <div className='flex flex-col justify-center items-center gap-1 p-10 bg-transparent'>
+      <div className='fixed top-0 left-0 right-0 flex flex-col justify-center items-center gap-1 p-10 bg-transparent z-50'>
         <div className='flex h-16 items-center gap-7 border [background:linear-gradient(95deg,rgba(235,237,240,0.85)_9.65%,rgba(233,236,238,0.81)_58.96%,rgba(254,254,255,0.87)_86.15%)] shadow-[0_20px_30px_0_rgba(77,90,108,0.12)] backdrop-blur-[7.5px] px-10 py-[9px] rounded-[100px] border-solid border-white w-fit'>
           {/* logo */}
-          <Logo />
+          <div
+            onClick={() => {
+              router.push('/')
+            }}
+            className='flex items-center gap-[7px] cursor-pointer'>
+            {/* logo */}
+            <img
+              src='/lfdesignlogo.svg'
+              alt='logo'
+              className='header-logo mr-1 h-8'
+            />
+            {/* 文字部分 */}
+            <span
+              className={`text-black [font-family:"Alibaba_PuHuiTi"] text-xl font-bold leading-[normal]`}>
+              LF DESIGN
+            </span>
+          </div>
+
           {/* 其它页面 */}
           <div className='flex items-center gap-5'>
             <Link href="/design" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>设计</Link>

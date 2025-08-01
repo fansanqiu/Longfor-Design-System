@@ -1,10 +1,10 @@
 
-import { LayoutDesign } from '@/themes/starter/components/LayoutDesign'
+import { Design } from '@/themes/starter/components/Design'
 import LeftMenuBar from '@/themes/gitbook/components/LeftMenuBar'
 
-export default function Design() {
+export default function DesignPage() {
   return (
-    <LayoutDesign>
+    <Design>
       <div className="flex">
         <LeftMenuBar />
         <div className="flex-grow p-4">
@@ -12,6 +12,6 @@ export default function Design() {
           <p>这里是设计原则的内容。</p>
         </div>
       </div>
-    </LayoutDesign>
+    </Design>
   )
 }

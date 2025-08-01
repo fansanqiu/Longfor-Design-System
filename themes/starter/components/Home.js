@@ -6,6 +6,7 @@ export const Home = props => {
     // 返回 JSX 元素
     return (
         < div className="w-full">
+
             {/* Hero */}
             <div className='flex w-fill flex-col items-center gap-[74px] [background:linear-gradient(180deg,#ECEDEE_0%,#FFF_51%,#FFF_100%,#F1F1F1_100%)] pt-[200px] pb-[145px] justify-center'>
                 <div className='flex items-center gap-[23px]'>

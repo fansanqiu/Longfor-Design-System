@@ -4,6 +4,13 @@
 
 html {
   overflow-x: hidden;
+  -ms-overflow-style: none;
+  overflow: -moz-scrollbars-none;
+  scrollbar-width: none; /* firefox */
+}
+
+html::-webkit-scrollbar {
+  width: 0 !important;
 }
 
 .wrapper {
