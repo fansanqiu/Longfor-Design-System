@@ -42,11 +42,11 @@ export const Home = props => {
 
                 <div className='flex w-full items-center gap-10 max-w-[1200px]'>
                     <div className="h-[389px] self-stretch rounded-3xl w-full flex flex-col gap-[25px] items-center">
-                        <img src="/images/starter/home/chatAi.jpg" alt="" />
+                        <img src="/images/starter/home/chatAi.png" alt="" />
                         <p className='self-stretch text-[#111] text-center [font-family:"PingFang_SC"] text-[23px] font-semibold leading-[normal] tracking-[2px]'>Chat AI</p>
                     </div>
                     <div className="h-[389px] self-stretch rounded-3xl w-full flex flex-col gap-[25px] items-center">
-                        <img src="/images/starter/home/copilotAi.jpg" alt="" />
+                        <img src="/images/starter/home/copilotAi.png" alt="" />
                         <p className='self-stretch text-[#111] text-center [font-family:"PingFang_SC"] text-[23px] font-semibold leading-[normal] tracking-[2px]'>Copilot AI</p>
                     </div>
                 </div>
