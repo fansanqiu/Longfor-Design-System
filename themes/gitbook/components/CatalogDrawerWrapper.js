@@ -20,7 +20,7 @@ const CatalogDrawerWrapper = ({ post, cRef }) => {
   }
   useEffect(() => {
     changeTocVisible(false)
-  }, [router])
+  }, [router.asPath])
   return (
     <>
       <div

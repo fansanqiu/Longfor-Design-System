@@ -1,127 +1,71 @@
-'use client'
+// 'use client' // 声明这是一个客户端组件，是 Next.js 13+ App Router 的特性
+import NotionIcon from '@/components/NotionIcon' // 导入 Notion 图标组件
+import NotionPage from '@/components/NotionPage' // 导入 Notion 页面渲染组件
+import { siteConfig } from '@/lib/config' // 导入网站配置
+import { useGlobal } from '@/lib/global' // 导入全局状态钩子
+import { isBrowser } from '@/lib/utils' // 导入判断是否在浏览器环境的工具函数
+import { getShortId } from '@/lib/utils/pageId' // 导入获取页面短 ID 的工具函数
+import dynamic from 'next/dynamic' // 导入 Next.js 的动态导入功能，用于代码分割
+import Head from 'next/head' // 导入 Next.js 的 Head 组件，用于修改页面头部信息
+import { useRouter } from 'next/router' // 导入 Next.js 的路由钩子
+import { createContext, useContext, useEffect, useRef, useState } from 'react' // 导入 React 的核心钩子
+import ArticleAround from './components/ArticleAround' // 导入“上一篇/下一篇”文章导航组件
+import ArticleInfo from './components/ArticleInfo' // 导入文章信息组件
+import BottomMenuBar from './components/BottomMenuBar' // 导入底部菜单栏组件（移动端）
+import Catalog from './components/Catalog' // 导入文章目录组件
+import CatalogDrawerWrapper from './components/CatalogDrawerWrapper' // 导入目录抽屉包装器
+import Header from './components/Header' // 导入头部导航栏组件
+import Home from './components/Home' // 导入首页组件
+import JumpToTopButton from './components/JumpToTopButton' // 导入返回顶部按钮组件
+import NavPostList from './components/NavPostList' // 导入导航文章列表组件
+import PageNavDrawer from './components/PageNavDrawer' // 导入页面导航抽屉组件（移动端）
+import CONFIG from './config' // 导入 GitBook 主题的特定配置
+import { Style } from './style' // 导入主题的内联样式
 
-import Comment from '@/components/Comment'
-import { AdSlot } from '@/components/GoogleAdsense'
-import Live2D from '@/components/Live2D'
-import LoadingCover from '@/components/LoadingCover'
-import NotionIcon from '@/components/NotionIcon'
-import NotionPage from '@/components/NotionPage'
-import ShareBar from '@/components/ShareBar'
-import DashboardBody from '@/components/ui/dashboard/DashboardBody'
-import DashboardHeader from '@/components/ui/dashboard/DashboardHeader'
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import { isBrowser } from '@/lib/utils'
-import { getShortId } from '@/lib/utils/pageId'
-import { SignIn, SignUp } from '@clerk/nextjs'
-import dynamic from 'next/dynamic'
-import Head from 'next/head'
-import Link from 'next/link'
-import { useRouter } from 'next/router'
-import { createContext, useContext, useEffect, useRef, useState } from 'react'
-import Announcement from './components/Announcement'
-import ArticleAround from './components/ArticleAround'
-import ArticleInfo from './components/ArticleInfo'
-import { ArticleLock } from './components/ArticleLock'
-import BlogArchiveItem from './components/BlogArchiveItem'
-import BottomMenuBar from './components/BottomMenuBar'
-import Catalog from './components/Catalog'
-import CatalogDrawerWrapper from './components/CatalogDrawerWrapper'
-import CategoryItem from './components/CategoryItem'
-import Footer from './components/Footer'
-import Header from './components/Header'
-import InfoCard from './components/InfoCard'
-import JumpToTopButton from './components/JumpToTopButton'
-import NavPostList from './components/NavPostList'
-import PageNavDrawer from './components/PageNavDrawer'
-import RevolverMaps from './components/RevolverMaps'
-import TagItemMini from './components/TagItemMini'
-import CONFIG from './config'
-import { Style } from './style'
-
+// 使用 dynamic 动态导入 Algolia 搜索模态框，并禁用 SSR (ssr: false)
+// 因为该组件可能依赖仅在浏览器中存在的 window 对象
 const AlgoliaSearchModal = dynamic(
   () => import('@/components/AlgoliaSearchModal'),
   { ssr: false }
 )
-const WWAds = dynamic(() => import('@/components/WWAds'), { ssr: false })
 
-// 主题全局变量
+// 创建一个 React Context 用于在 GitBook 主题内部共享全局状态
 const ThemeGlobalGitbook = createContext()
+// 导出一个自定义钩子，方便子组件消费上面创建的 Context
 export const useGitBookGlobal = () => useContext(ThemeGlobalGitbook)
 
 /**
- * 给最新的文章标一个红点
- */
-function getNavPagesWithLatest(allNavPages, latestPosts, post) {
-  // localStorage 保存id和上次阅读时间戳： posts_read_time = {"${post.id}":"Date()"}
-  const postReadTime = JSON.parse(
-    localStorage.getItem('post_read_time') || '{}'
-  )
-  if (post) {
-    postReadTime[getShortId(post.id)] = new Date().getTime()
-  }
-  // 更新
-  localStorage.setItem('post_read_time', JSON.stringify(postReadTime))
-
-  return allNavPages?.map(item => {
-    const res = {
-      short_id: item.short_id,
-      title: item.title || '',
-      pageCoverThumbnail: item.pageCoverThumbnail || '',
-      category: item.category || null,
-      tags: item.tags || null,
-      summary: item.summary || null,
-      slug: item.slug,
-      href: item.href,
-      pageIcon: item.pageIcon || '',
-      lastEditedDate: item.lastEditedDate
-    }
-    // 属于最新文章通常6篇 && (无阅读记录 || 最近更新时间大于上次阅读时间)
-    if (
-      latestPosts.some(post => post?.id.indexOf(item?.short_id) === 14) &&
-      (!postReadTime[item.short_id] ||
-        postReadTime[item.short_id] < new Date(item.lastEditedDate).getTime())
-    ) {
-      return { ...res, isLatest: true }
-    } else {
-      return res
-    }
-  })
-}
-
-/**
- * 基础布局
- * 采用左右两侧布局，移动端使用顶部导航栏
+ * 基础布局组件
+ * 采用左右两侧布局结构，在移动端则使用顶部和底部导航栏
+ * @param {Object} props - 组件属性，包含 children, post, allNavPages 等
  * @returns {JSX.Element}
  * @constructor
  */
 const LayoutBase = props => {
+  // 从 props 中解构出所需的数据
   const {
-    children,
-    post,
-    allNavPages,
-    latestPosts,
-    slotLeft,
-    slotRight,
-    slotTop
+    children, // 子组件，即页面主要内容
+    post, // 当前文章数据
+    allNavPages, // 所有导航页面的数据
+    latestPosts, // 最新文章数据
+    slotLeft, // 左侧插槽
+    slotRight, // 右侧插槽
+    slotTop // 顶部插槽
   } = props
-  const { fullWidth } = useGlobal()
-  const router = useRouter()
-  const [tocVisible, changeTocVisible] = useState(false)
-  const [pageNavVisible, changePageNavVisible] = useState(false)
-  const [filteredNavPages, setFilteredNavPages] = useState(allNavPages)
+  const { fullWidth } = useGlobal() // 从全局状态获取 fullWidth，判断是否为全宽布局
+  const router = useRouter() // 获取路由实例
+  const [tocVisible, changeTocVisible] = useState(false) // 状态：目录是否可见（移动端）
+  const [pageNavVisible, changePageNavVisible] = useState(false) // 状态：页面导航是否可见（移动端）
+  const [filteredNavPages, setFilteredNavPages] = useState(allNavPages) // 状态：经过筛选（添加了 isLatest 标记）的导航页面
 
-  const searchModal = useRef(null)
+  const searchModal = useRef(null) // 创建一个 ref 用于引用搜索模态框组件
 
+  // 当 allNavPages 变化时，更新 filteredNavPages
   useEffect(() => {
-    setFilteredNavPages(getNavPagesWithLatest(allNavPages, latestPosts, post))
-  }, [router])
+    setFilteredNavPages(allNavPages)
+  }, [allNavPages])
 
-  const GITBOOK_LOADING_COVER = siteConfig(
-    'GITBOOK_LOADING_COVER',
-    true,
-    CONFIG
-  )
+  // 使用 Context.Provider 将共享的状态和方法传递给所有子组件
   return (
     <ThemeGlobalGitbook.Provider
       value={{
@@ -134,11 +78,12 @@ const LayoutBase = props => {
         pageNavVisible,
         changePageNavVisible
       }}>
-      <Style />
+      <Style /> {/* 注入主题的 CSS 样式 */}
 
       <div
         id='theme-gitbook'
         className={`${siteConfig('FONT_STYLE')} pb-16 md:pb-0 scroll-smooth bg-white dark:bg-black w-full h-full min-h-screen justify-center dark:text-gray-300`}>
+        {/* Algolia 搜索模态框 */}
         <AlgoliaSearchModal cRef={searchModal} {...props} />
 
         {/* 顶部导航栏 */}
@@ -147,20 +92,18 @@ const LayoutBase = props => {
         <main
           id='wrapper'
           className={`${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'flex-row-reverse' : ''} relative flex justify-between w-full gap-x-6 h-full mx-auto max-w-screen-4xl`}>
-          {/* 左侧推拉抽屉 */}
+          {/* 左侧边栏，仅在非全宽模式下且为桌面端时显示 */}
           {fullWidth ? null : (
             <div className={'hidden md:block relative z-10 '}>
               <div className='w-80 pt-14 pb-4 sticky top-0 h-screen flex justify-between flex-col'>
-                {/* 导航 */}
+                {/* 导航部分 */}
                 <div className='overflow-y-scroll scroll-hidden pt-10 pl-5'>
-                  {/* 嵌入 */}
+                  {/* 左侧插槽，用于插入自定义内容 */}
                   {slotLeft}
 
-                  {/* 所有文章列表 */}
+                  {/* 所有文章的导航列表 */}
                   <NavPostList filteredNavPages={filteredNavPages} {...props} />
                 </div>
-                {/* 页脚 */}
-                <Footer {...props} />
               </div>
             </div>
           )}
@@ -172,66 +115,37 @@ const LayoutBase = props => {
             <div
               id='container-inner'
               className={`w-full ${fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0'} justify-center mx-auto`}>
-              {slotTop}
-              <WWAds className='w-full' orientation='horizontal' />
-
-              {children}
-
-              {/* Google广告 */}
-              <AdSlot type='in-article' />
-              <WWAds className='w-full' orientation='horizontal' />
-            </div>
-
-            {/* 底部 */}
-            <div className='md:hidden'>
-              <Footer {...props} />
+              {slotTop} {/* 顶部插槽 */}
+              {children} {/* 页面主要内容 */}
             </div>
           </div>
 
-          {/*  右侧 */}
+          {/* 右侧边栏，仅在非全宽模式下且为大屏幕桌面端（2xl）时显示 */}
           {fullWidth ? null : (
             <div
               className={
                 'w-72 hidden 2xl:block dark:border-transparent flex-shrink-0 relative z-10 '
               }>
               <div className='py-14 sticky top-0'>
+                {/* 文章信息，显示当前文章或公告的信息 */}
                 <ArticleInfo post={props?.post ? props?.post : props.notice} />
 
                 <div>
-                  {/* 桌面端目录 */}
+                  {/* 桌面端文章目录 */}
                   <Catalog {...props} />
-                  {slotRight}
-                  {router.route === '/' && (
-                    <>
-                      <InfoCard {...props} />
-                      {siteConfig(
-                        'GITBOOK_WIDGET_REVOLVER_MAPS',
-                        null,
-                        CONFIG
-                      ) === 'true' && <RevolverMaps />}
-                      <Live2D />
-                    </>
-                  )}
-                  {/* gitbook主题首页只显示公告 */}
-                  <Announcement {...props} />
                 </div>
-
-                <AdSlot type='in-article' />
-                <Live2D />
               </div>
             </div>
           )}
         </main>
 
-        {GITBOOK_LOADING_COVER && <LoadingCover />}
-
-        {/* 回顶按钮 */}
+        {/* 返回顶部按钮 */}
         <JumpToTopButton />
 
-        {/* 移动端导航抽屉 */}
+        {/* 移动端导航抽屉（从左侧滑出） */}
         <PageNavDrawer {...props} filteredNavPages={filteredNavPages} />
 
-        {/* 移动端底部导航栏 */}
+        {/* 移动端底部菜单栏 */}
         <BottomMenuBar {...props} />
       </div>
     </ThemeGlobalGitbook.Provider>
@@ -239,90 +153,48 @@ const LayoutBase = props => {
 }
 
 /**
- * 首页
- * 重定向到某个文章详情页
+ * 首页布局
  * @param {*} props
- * @returns
+ * @returns {JSX.Element}
  */
 const LayoutIndex = props => {
-  const router = useRouter()
-  const index = siteConfig('GITBOOK_INDEX_PAGE', 'about', CONFIG)
-  const [hasRedirected, setHasRedirected] = useState(false) // 添加状态追踪是否已重定向
-
-  useEffect(() => {
-    const tryRedirect = async () => {
-      if (!hasRedirected) {
-        // 仅当未重定向时执行
-        setHasRedirected(true) // 更新状态，防止多次执行
-
-        // 重定向到指定文章
-        await router.push(index)
-
-        // 使用setTimeout检查页面加载情况
-        setTimeout(() => {
-          const article = document.querySelector(
-            '#article-wrapper #notion-article'
-          )
-          if (!article) {
-            console.log('请检查您的Notion数据库中是否包含此slug页面： ', index)
-
-            // 显示错误信息
-            const containerInner = document.querySelector(
-              '#theme-gitbook #container-inner'
-            )
-            const newHTML = `<h1 class="text-3xl pt-12 dark:text-gray-300">配置有误</h1><blockquote class="notion-quote notion-block-ce76391f3f2842d386468ff1eb705b92"><div>请在您的notion中添加一个slug为${index}的文章</div></blockquote>`
-            containerInner?.insertAdjacentHTML('afterbegin', newHTML)
-          }
-        }, 2000)
-      }
-    }
-
-    if (index) {
-      console.log('重定向', index)
-      tryRedirect()
-    } else {
-      console.log('无重定向', index)
-    }
-  }, [index, hasRedirected]) // 将 hasRedirected 作为依赖确保状态变更时更新
-
-  return null // 不渲染任何内容
+  return <Home />
 }
 
 /**
- * 文章列表 无
- * 全靠页面导航
+ * 文章详情页布局
  * @param {*} props
- * @returns
- */
-const LayoutPostList = props => {
-  return <></>
-}
-
-/**
- * 文章详情
- * @param {*} props
- * @returns
+ * @returns {JSX.Element}
  */
 const LayoutSlug = props => {
-  const { post, prev, next, siteInfo, lock, validPassword } = props
+  const { post, prev, next, siteInfo, lock, validPassword } = props // 从 props 解构数据
   const router = useRouter()
-  // 如果是文档首页文章，则修改浏览器标签
+  
+  // 提前调用所有 siteConfig 以确保 React hook 的调用顺序在每次渲染时都保持一致
   const index = siteConfig('GITBOOK_INDEX_PAGE', 'about', CONFIG)
-  const basePath = router.asPath.split('?')[0]
+  const postTitleIcon = siteConfig('POST_TITLE_ICON')
+  const postDetailCategory = siteConfig('POST_DETAIL_CATEGORY')
+  const postDetailTag = siteConfig('POST_DETAIL_TAG')
+  
+  // 如果当前文章是文档的首页，则修改浏览器标签页的标题格式
+  const basePath = router.asPath.split('?')[0] // 获取不带查询参数的路径
   const title =
     basePath?.indexOf(index) > 0
-      ? `${post?.title} | ${siteInfo?.description}`
-      : `${post?.title} | ${siteInfo?.title}`
+      ? `${post?.title} | ${siteInfo?.description}` // 首页格式
+      : `${post?.title} | ${siteInfo?.title}` // 普通文章页格式
 
-  const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000
+  const waiting404 = siteConfig('POST_WAITING_TIME_FOR_404') * 1000 // 获取404等待时间配置
+  // useEffect 用于处理文章不存在的情况
   useEffect(() => {
-    // 404
+    // 如果 post 数据为空，则可能是 404 页面
     if (!post) {
+      // 延迟一段时间后检查
       setTimeout(() => {
         if (isBrowser) {
           const article = document.querySelector(
             '#article-wrapper #notion-article'
           )
+          // 如果文章内容依然不存在，则跳转到真正的 404 页面
           if (!article) {
             router.push('/404').then(() => {
               console.warn('找不到页面', router.asPath)
@@ -331,60 +203,41 @@ const LayoutSlug = props => {
         }
       }, waiting404)
     }
-  }, [post])
+  }, [post]) // 依赖于 post 对象
+
   return (
     <>
       <Head>
-        <title>{title}</title>
+        <title>{title}</title> {/* 设置页面标题 */}
       </Head>
 
-      {/* 文章锁 */}
-      {lock && <ArticleLock validPassword={validPassword} />}
-
+      {/* 如果文章未被锁定，则显示文章内容 */}
       {!lock && (
         <div id='container'>
-          {/* title */}
+          {/* 文章标题 */}
           <h1 className='text-3xl pt-12  dark:text-gray-300'>
-            {siteConfig('POST_TITLE_ICON') && (
+            {postTitleIcon && ( // 是否显示标题前的图标
               <NotionIcon icon={post?.pageIcon} />
             )}
             {post?.title}
           </h1>
 
-          {/* Notion文章主体 */}
+          {/* Notion 文章主体内容 */}
           {post && (
             <section className='px-1'>
               <div id='article-wrapper'>
-                <NotionPage post={post} />
+                <NotionPage post={post} /> {/* 渲染 Notion 页面 */}
               </div>
 
-              {/* 分享 */}
-              <ShareBar post={post} />
-              {/* 文章分类和标签信息 */}
-              <div className='flex justify-between'>
-                {siteConfig('POST_DETAIL_CATEGORY') && post?.category && (
-                  <CategoryItem category={post.category} />
-                )}
-                <div>
-                  {siteConfig('POST_DETAIL_TAG') &&
-                    post?.tagItems?.map(tag => (
-                      <TagItemMini key={tag.name} tag={tag} />
-                    ))}
-                </div>
-              </div>
-
+              {/* 如果是文章类型（Post），则显示上一篇/下一篇文章的导航 */}
               {post?.type === 'Post' && (
                 <ArticleAround prev={prev} next={next} />
               )}
 
-              {/* <AdSlot />
-              <WWAds className='w-full' orientation='horizontal' /> */}
-
-              <Comment frontMatter={post} />
             </section>
           )}
 
-          {/* 文章目录 */}
+          {/* 文章目录抽屉（移动端） */}
           <CatalogDrawerWrapper {...props} />
         </div>
       )}
@@ -393,49 +246,16 @@ const LayoutSlug = props => {
 }
 
 /**
- * 没有搜索
- * 全靠页面导航
+ * 404 页面布局
  * @param {*} props
- * @returns
- */
-const LayoutSearch = props => {
-  return <></>
-}
-
-/**
- * 归档页面基本不会用到
- * 全靠页面导航
- * @param {*} props
- * @returns
- */
-const LayoutArchive = props => {
-  const { archivePosts } = props
-
-  return (
-    <>
-      <div className='mb-10 pb-20 md:py-12 py-3  min-h-full'>
-        {Object.keys(archivePosts)?.map(archiveTitle => (
-          <BlogArchiveItem
-            key={archiveTitle}
-            archiveTitle={archiveTitle}
-            archivePosts={archivePosts}
-          />
-        ))}
-      </div>
-    </>
-  )
-}
-
-/**
- * 404 页面
- * @param {*} props
- * @returns
+ * @returns {JSX.Element}
  */
 const Layout404 = props => {
   const router = useRouter()
-  const { locale } = useGlobal()
+  const { locale } = useGlobal() // 获取国际化语言文本
+  // useEffect 用于一个回退机制
   useEffect(() => {
-    // 延时3秒如果加载失败就返回首页
+    // 延迟3秒后，如果页面上还是没有文章内容，则强制返回首页
     setTimeout(() => {
       const article = isBrowser && document.getElementById('article-wrapper')
       if (!article) {
@@ -448,14 +268,15 @@ const Layout404 = props => {
 
   return (
     <>
+      {/* 居中显示的 404 提示信息 */}
       <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
         <div className='dark:text-gray-200'>
           <h2 className='inline-block border-r-2 border-gray-600 mr-2 px-3 py-2 align-top'>
-            <i className='mr-2 fas fa-spinner animate-spin' />
+            <i className='mr-2 fas fa-spinner animate-spin' /> {/* 一个旋转的加载图标 */}
             404
           </h2>
           <div className='inline-block text-left h-32 leading-10 items-center'>
-            <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2>
+            <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2> {/* 显示 "页面未找到" 的文本 */}
           </div>
         </div>
       </div>
@@ -463,163 +284,12 @@ const Layout404 = props => {
   )
 }
 
-/**
- * 分类列表
- */
-const LayoutCategoryIndex = props => {
-  const { categoryOptions } = props
-  const { locale } = useGlobal()
-  return (
-    <>
-      <div className='bg-white dark:bg-gray-700 py-10'>
-        <div className='dark:text-gray-200 mb-5'>
-          <i className='mr-4 fas fa-th' />
-          {locale.COMMON.CATEGORY}:
-        </div>
-        <div id='category-list' className='duration-200 flex flex-wrap'>
-          {categoryOptions?.map(category => {
-            return (
-              <Link
-                key={category.name}
-                href={`/category/${category.name}`}
-                passHref
-                legacyBehavior>
-                <div
-                  className={
-                    'hover:text-black dark:hover:text-white dark:text-gray-300 dark:hover:bg-gray-600 px-5 cursor-pointer py-2 hover:bg-gray-100'
-                  }>
-                  <i className='mr-4 fas fa-folder' />
-                  {category.name}({category.count})
-                </div>
-              </Link>
-            )
-          })}
-        </div>
-      </div>
-    </>
-  )
-}
 
-/**
- * 标签列表
- */
-const LayoutTagIndex = props => {
-  const { tagOptions } = props
-  const { locale } = useGlobal()
-
-  return (
-    <>
-      <div className='bg-white dark:bg-gray-700 py-10'>
-        <div className='dark:text-gray-200 mb-5'>
-          <i className='mr-4 fas fa-tag' />
-          {locale.COMMON.TAGS}:
-        </div>
-        <div id='tags-list' className='duration-200 flex flex-wrap'>
-          {tagOptions?.map(tag => {
-            return (
-              <div key={tag.name} className='p-2'>
-                <TagItemMini key={tag.name} tag={tag} />
-              </div>
-            )
-          })}
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 登录页面
- * @param {*} props
- * @returns
- */
-const LayoutSignIn = props => {
-  const { post } = props
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  return (
-    <>
-      <div className='grow mt-20'>
-        {/* clerk预置表单 */}
-        {enableClerk && (
-          <div className='flex justify-center py-6'>
-            <SignIn />
-          </div>
-        )}
-        <div id='article-wrapper'>
-          <NotionPage post={post} />
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 注册页面
- * @param {*} props
- * @returns
- */
-const LayoutSignUp = props => {
-  const { post } = props
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
-  return (
-    <>
-      <div className='grow mt-20'>
-        {/* clerk预置表单 */}
-        {enableClerk && (
-          <div className='flex justify-center py-6'>
-            <SignUp />
-          </div>
-        )}
-        <div id='article-wrapper'>
-          <NotionPage post={post} />
-        </div>
-      </div>
-    </>
-  )
-}
-
-/**
- * 仪表盘
- * @param {*} props
- * @returns
- */
-const LayoutDashboard = props => {
-  const { post } = props
-
-  return (
-    <>
-      <div className='container grow'>
-        <div className='flex flex-wrap justify-center -mx-4'>
-          <div id='container-inner' className='w-full p-4'>
-            {post && (
-              <div id='article-wrapper' className='mx-auto'>
-                <NotionPage {...props} />
-              </div>
-            )}
-          </div>
-        </div>
-      </div>
-      {/* 仪表盘 */}
-      <DashboardHeader />
-      <DashboardBody />
-    </>
-  )
-}
-
+// 导出所有布局组件和主题配置
 export {
   Layout404,
-  LayoutArchive,
   LayoutBase,
-  LayoutCategoryIndex,
-  LayoutDashboard,
   LayoutIndex,
-  LayoutPostList,
-  LayoutSearch,
-  LayoutSignIn,
-  LayoutSignUp,
   LayoutSlug,
-  LayoutTagIndex,
   CONFIG as THEME_CONFIG
 }

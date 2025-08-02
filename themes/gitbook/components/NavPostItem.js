@@ -1,6 +1,7 @@
 import Badge from '@/components/Badge'
 import Collapse from '@/components/Collapse'
 import { siteConfig } from '@/lib/config'
+import { useGlobal } from '@/lib/global'
 import { useEffect, useState } from 'react'
 import BlogPostCard from './BlogPostCard'
 
@@ -13,8 +14,9 @@ import BlogPostCard from './BlogPostCard'
  */
 const NavPostItem = props => {
   const { group, expanded, toggleItem } = props // 接收传递的展开状态和切换函数
-  const hoverExpand = siteConfig('GITBOOK_FOLDER_HOVER_EXPAND')
+  const { locale } = useGlobal()
   const [isTouchDevice, setIsTouchDevice] = useState(false)
+  const hoverExpand = siteConfig('GITBOOK_FOLDER_HOVER_EXPAND')
 
   // 检测是否为触摸设备
   useEffect(() => {

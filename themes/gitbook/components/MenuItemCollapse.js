@@ -16,12 +16,17 @@ export const MenuItemCollapse = props => {
   const [isOpen, changeIsOpen] = useState(false)
 
   const router = useRouter()
+  const [selected, setSelected] = useState(false)
+
+  useEffect(() => {
+    if (router.isReady) {
+      setSelected(router.pathname === link.href || router.asPath === link.href)
+    }
+  }, [router.asPath, router.isReady, link])
 
   if (!link || !link.show) {
     return null
   }
-
-  const selected = router.pathname === link.href || router.asPath === link.href
 
   const toggleShow = () => {
     changeShow(!show)

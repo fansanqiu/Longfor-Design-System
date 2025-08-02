@@ -110,7 +110,7 @@ function processCrossNodeSpoilers(root, className, spoilerTag) {
 
   // 替换匹配项
   const newHtml = html.replace(regex, function (match, content) {
-    return `<span class="${className}">${content}</span>`
+    return `<span className="${className}">${content}</span>`
   })
 
   // 如果内容有变化，更新 DOM

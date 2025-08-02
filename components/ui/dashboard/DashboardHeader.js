@@ -22,11 +22,11 @@ export default function DashboardHeader() {
             alt={user?.fullName}
           />
 
-          <div class='font-medium dark:text-white'>
+          <div className='font-medium dark:text-white'>
             <div className='flex items-center gap-x-2'>
               <span>{user?.fullName}</span>
               <Link href='/dashboard/membership'>
-                <span class='bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300'>
+                <span className='bg-gray-100 text-gray-800 text-xs font-medium me-2 px-2.5 py-0.5 rounded dark:bg-gray-700 dark:text-gray-300'>
                   普通用户
                 </span>
               </Link>

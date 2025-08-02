@@ -1,10 +1,18 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export const MenuItemPCNormal = props => {
   const { link } = props
   const router = useRouter()
-  const selected = router.pathname === link.href || router.asPath === link.href
+  const [selected, setSelected] = useState(false)
+
+  useEffect(() => {
+    if (router.isReady) {
+      setSelected(router.pathname === link.href || router.asPath === link.href)
+    }
+  }, [router.asPath, router.isReady, link])
+
   if (!link || !link.show) {
     return null
   }

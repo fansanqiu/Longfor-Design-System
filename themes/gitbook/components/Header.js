@@ -1,134 +1,55 @@
-import Collapse from '@/components/Collapse'
-import DarkModeButton from '@/components/DarkModeButton'
-import { siteConfig } from '@/lib/config'
-import { useGlobal } from '@/lib/global'
-import { SignInButton, SignedOut, UserButton } from '@clerk/nextjs'
-import { useRef, useState } from 'react'
-import CONFIG from '../config'
-import LogoBar from './LogoBar'
-import { MenuBarMobile } from './MenuBarMobile'
-import { MenuItemDrop } from './MenuItemDrop'
-import SearchInput from './SearchInput'
+// 禁用 eslint 的 no-unreachable 规则，因为文件中可能存在不可达代码
+/* eslint-disable no-unreachable */
+import Link from 'next/link'
+// 导入 Next.js 的 useRouter 钩子，用于访问路由信息
+import { useRouter } from 'next/router'
 
 /**
- * 页头：顶部导航栏 + 菜单
- * @param {} param0
- * @returns
+ * 顶部导航栏
  */
-export default function Header(props) {
-  const { className, customNav, customMenu } = props
-  const [isOpen, changeShow] = useState(false)
-  const collapseRef = useRef(null)
+const Header = props => {
+  // 使用 useRouter 钩子获取当前路由信息
+  const router = useRouter()
 
-  const { locale } = useGlobal()
-
-  const defaultLinks = [
-    {
-      icon: 'fas fa-th',
-      name: locale.COMMON.CATEGORY,
-      href: '/category',
-      show: siteConfig('GITBOOK_MENU_CATEGORY', null, CONFIG)
-    },
-    {
-      icon: 'fas fa-tag',
-      name: locale.COMMON.TAGS,
-      href: '/tag',
-      show: siteConfig('GITBOOK_BOOK_MENU_TAG', null, CONFIG)
-    },
-    {
-      icon: 'fas fa-archive',
-      name: locale.NAV.ARCHIVE,
-      href: '/archive',
-      show: siteConfig('GITBOOK_MENU_ARCHIVE', null, CONFIG)
-    },
-    {
-      icon: 'fas fa-search',
-      name: locale.NAV.SEARCH,
-      href: '/search',
-      show: siteConfig('GITBOOK_MENU_SEARCH', null, CONFIG)
-    }
-  ]
-
-  let links = defaultLinks.concat(customNav)
-
-  const toggleMenuOpen = () => {
-    changeShow(!isOpen)
-  }
-
-  // 如果 开启自定义菜单，则覆盖Page生成的菜单
-  if (siteConfig('CUSTOM_MENU')) {
-    links = customMenu
-  }
-
-  const enableClerk = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
-
+  // 返回 JSX 元素
   return (
-    <div id='top-nav' className={'fixed top-0 w-full z-20 ' + className}>
-      {/* PC端菜单 */}
-      <div className='flex justify-center border-b dark:border-black items-center w-full h-16 bg-white dark:bg-hexo-black-gray'>
-        <div className='px-5 max-w-screen-4xl w-full flex gap-x-3 justify-between items-center'>
-          {/* 左侧*/}
-          <div className='flex'>
-            <LogoBar {...props} />
-
-            {/* 桌面端顶部菜单 */}
-            <div className='hidden md:flex'>
-              {links &&
-                links?.map((link, index) => (
-                  <MenuItemDrop key={index} link={link} />
-                ))}
-            </div>
+    <>
+      {/* 导航栏 */}
+      <div className='fixed top-0 left-0 right-0 flex flex-col justify-center items-center gap-1 p-10 bg-transparent z-50'>
+        <div className='flex h-16 items-center gap-7 border [background:linear-gradient(95deg,rgba(235,237,240,0.85)_9.65%,rgba(233,236,238,0.81)_58.96%,rgba(254,254,255,0.87)_86.15%)] shadow-[0_20px_30px_0_rgba(77,90,108,0.12)] backdrop-blur-[7.5px] px-10 py-[9px] rounded-[100px] border-solid border-white w-fit'>
+          {/* logo */}
+          <div
+            onClick={() => {
+              router.push('/')
+            }}
+            className='flex items-center gap-[7px] cursor-pointer'>
+            {/* logo */}
+            <img
+              src='/lfdesignlogo.svg'
+              alt='logo'
+              className='header-logo mr-1 h-8'
+            />
+            {/* 文字部分 */}
+            <span
+              className={`text-black [font-family:"Alibaba_PuHuiTi"] text-xl font-bold leading-[normal]`}>
+              LF DESIGN
+            </span>
           </div>
 
-          {/* 右侧 */}
-          <div className='flex items-center gap-4'>
-            {/* 登录相关 */}
-            {enableClerk && (
-              <>
-                <SignedOut>
-                  <SignInButton mode='modal'>
-                    <button className='bg-green-500 hover:bg-green-600 text-white rounded-lg px-3 py-2'>
-                      {locale.COMMON.SIGN_IN}
-                    </button>
-                  </SignInButton>
-                </SignedOut>
-                <UserButton />
-              </>
-            )}
-            <DarkModeButton className='text-sm items-center h-full hidden md:flex' />
-            <SearchInput className='hidden md:flex md:w-52 lg:w-72' />
-            {/* 折叠按钮、仅移动端显示 */}
-            <div className='mr-1 flex md:hidden justify-end items-center space-x-4  dark:text-gray-200'>
-              <DarkModeButton className='flex text-md items-center h-full' />
-              <div
-                onClick={toggleMenuOpen}
-                className='cursor-pointer text-lg hover:scale-110 duration-150'>
-                {isOpen ? (
-                  <i className='fas fa-times' />
-                ) : (
-                  <i className='fa-solid fa-bars' />
-                )}
-              </div>
-            </div>
+          {/* 其它页面 */}
+          <div className='flex items-center gap-5'>
+            <Link href="/design" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>设计</Link>
+
+            <Link href="/" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>组件</Link>
+
+            <Link href="/" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>资源</Link>
+
+            <Link href="/" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>体验</Link>
           </div>
         </div>
       </div>
-
-      {/* 移动端折叠菜单 */}
-      <Collapse
-        type='vertical'
-        collapseRef={collapseRef}
-        isOpen={isOpen}
-        className='md:hidden'>
-        <div className='bg-white dark:bg-hexo-black-gray pt-1 py-2 lg:hidden '>
-          <MenuBarMobile
-            {...props}
-            onHeightChange={param =>
-              collapseRef.current?.updateCollapseHeight(param)
-            }
-          />
-        </div>
-      </Collapse>
-    </div>
+    </>
   )
 }
+
+export default Header

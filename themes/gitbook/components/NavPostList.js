@@ -14,15 +14,15 @@ import NavPostItem from './NavPostItem'
  * @constructor
  */
 const NavPostList = props => {
-  const { filteredNavPages } = props
+  const { filteredNavPages, siteInfo } = props
   const { locale, currentSearch } = useGlobal()
   const router = useRouter()
 
-  // 按分类将文章分组成文件夹
-  const categoryFolders = groupArticles(filteredNavPages)
-
   // 存放被展开的分组
   const [expandedGroups, setExpandedGroups] = useState([])
+
+  // 按分类将文章分组成文件夹
+  const categoryFolders = groupArticles(filteredNavPages)
 
   // 是否排他折叠，一次只展开一个文件夹
   const GITBOOK_EXCLUSIVE_COLLAPSE = siteConfig(
@@ -33,16 +33,16 @@ const NavPostList = props => {
 
   useEffect(() => {
     // 展开文件夹
-    setTimeout(() => {
+    if (router.isReady) {
       const currentPath = decodeURIComponent(router.asPath.split('?')[0])
       const defaultOpenIndex = getDefaultOpenIndexByPath(
         categoryFolders,
         currentPath
       )
       setExpandedGroups([defaultOpenIndex])
-    }, 500)
+    }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [router, filteredNavPages])
+  }, [router.isReady, router.asPath, filteredNavPages])
 
   // 折叠项切换，当折叠或展开数组时会调用
   const toggleItem = index => {
@@ -87,7 +87,7 @@ const NavPostList = props => {
 
   const homePost = {
     id: '-1',
-    title: siteConfig('DESCRIPTION'),
+    title: siteInfo?.description,
     href: href.indexOf('/') !== 0 ? '/' + href : href
   }
 
@@ -118,7 +118,6 @@ function groupArticles(filteredNavPages) {
     return []
   }
   const groups = []
-  const AUTO_SORT = siteConfig('GITBOOK_AUTO_SORT', true, CONFIG)
 
   for (let i = 0; i < filteredNavPages.length; i++) {
     const item = filteredNavPages[i]
@@ -126,7 +125,7 @@ function groupArticles(filteredNavPages) {
 
     let existingGroup = null
     // 开启自动分组排序；将同分类的自动归到同一个文件夹，忽略Notion中的排序
-    if (AUTO_SORT) {
+    if (siteConfig('GITBOOK_AUTO_SORT', true, CONFIG)) {
       existingGroup = groups.find(group => group.category === categoryName) // 搜索同名的最后一个分组
     } else {
       existingGroup = groups[groups.length - 1] // 获取最后一个分组

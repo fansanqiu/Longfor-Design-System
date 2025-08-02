@@ -5,12 +5,18 @@ import { useState } from 'react'
 export const MenuItemDrop = ({ link }) => {
   const [show, changeShow] = useState(false)
   const router = useRouter()
+  const [selected, setSelected] = useState(false)
+
+  useEffect(() => {
+    if (router.isReady) {
+      setSelected(router.pathname === link.href || router.asPath === link.href)
+    }
+  }, [router.asPath, router.isReady, link])
 
   if (!link || !link.show) {
     return null
   }
   const hasSubMenu = link?.subMenus?.length > 0
-  const selected = router.pathname === link.href || router.asPath === link.href
   return (
     <li
       className='cursor-pointer list-none items-center flex mx-2 font-semibold'

@@ -1,15 +1,21 @@
 import Link from 'next/link'
 import { useRouter } from 'next/router'
+import { useEffect, useState } from 'react'
 
 export const NormalMenu = props => {
   const { link } = props
   const router = useRouter()
+  const [selected, setSelected] = useState(false)
+
+  useEffect(() => {
+    if (router.isReady) {
+      setSelected(router.pathname === link.href || router.asPath === link.href)
+    }
+  }, [router.asPath, router.isReady, link])
 
   if (!link || !link.show) {
     return null
   }
-
-  const selected = router.pathname === link.href || router.asPath === link.href
 
   return (
     <Link

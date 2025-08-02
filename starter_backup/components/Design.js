@@ -5,8 +5,9 @@
  */
 export const Design = props => {
   const { children, meta } = props
-  
+
   return (
-    <></>
+    <>
+      这是设计页面</>
   )
 }
