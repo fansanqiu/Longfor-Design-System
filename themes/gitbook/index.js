@@ -4,7 +4,6 @@ import NotionPage from '@/components/NotionPage' // 导入 Notion 页面渲染�
 import { siteConfig } from '@/lib/config' // 导入网站配置
 import { useGlobal } from '@/lib/global' // 导入全局状态钩子
 import { isBrowser } from '@/lib/utils' // 导入判断是否在浏览器环境的工具函数
-import { getShortId } from '@/lib/utils/pageId' // 导入获取页面短 ID 的工具函数
 import dynamic from 'next/dynamic' // 导入 Next.js 的动态导入功能，用于代码分割
 import Head from 'next/head' // 导入 Next.js 的 Head 组件，用于修改页面头部信息
 import { useRouter } from 'next/router' // 导入 Next.js 的路由钩子
@@ -14,6 +13,7 @@ import ArticleInfo from './components/ArticleInfo' // 导入文章信息组件
 import BottomMenuBar from './components/BottomMenuBar' // 导入底部菜单栏组件（移动端）
 import Catalog from './components/Catalog' // 导入文章目录组件
 import CatalogDrawerWrapper from './components/CatalogDrawerWrapper' // 导入目录抽屉包装器
+import Design from './components/Design' // 导入Design组件
 import Header from './components/Header' // 导入头部导航栏组件
 import Home from './components/Home' // 导入首页组件
 import JumpToTopButton from './components/JumpToTopButton' // 导入返回顶部按钮组件
@@ -21,13 +21,6 @@ import NavPostList from './components/NavPostList' // 导入导航文章列表�
 import PageNavDrawer from './components/PageNavDrawer' // 导入页面导航抽屉组件（移动端）
 import CONFIG from './config' // 导入 GitBook 主题的特定配置
 import { Style } from './style' // 导入主题的内联样式
-
-// 使用 dynamic 动态导入 Algolia 搜索模态框，并禁用 SSR (ssr: false)
-// 因为该组件可能依赖仅在浏览器中存在的 window 对象
-const AlgoliaSearchModal = dynamic(
-  () => import('@/components/AlgoliaSearchModal'),
-  { ssr: false }
-)
 
 // 创建一个 React Context 用于在 GitBook 主题内部共享全局状态
 const ThemeGlobalGitbook = createContext()
@@ -45,15 +38,11 @@ const LayoutBase = props => {
   // 从 props 中解构出所需的数据
   const {
     children, // 子组件，即页面主要内容
-    post, // 当前文章数据
-    allNavPages, // 所有导航页面的数据
-    latestPosts, // 最新文章数据
-    slotLeft, // 左侧插槽
-    slotRight, // 右侧插槽
-    slotTop // 顶部插槽
+    allNavPages // 所有导航页面的数据
   } = props
   const { fullWidth } = useGlobal() // 从全局状态获取 fullWidth，判断是否为全宽布局
-  const router = useRouter() // 获取路由实例
+  const router = useRouter()
+  const isHomePage = router.pathname === '/'
   const [tocVisible, changeTocVisible] = useState(false) // 状态：目录是否可见（移动端）
   const [pageNavVisible, changePageNavVisible] = useState(false) // 状态：页面导航是否可见（移动端）
   const [filteredNavPages, setFilteredNavPages] = useState(allNavPages) // 状态：经过筛选（添加了 isLatest 标记）的导航页面
@@ -83,8 +72,6 @@ const LayoutBase = props => {
       <div
         id='theme-gitbook'
         className={`${siteConfig('FONT_STYLE')} pb-16 md:pb-0 scroll-smooth bg-white dark:bg-black w-full h-full min-h-screen justify-center dark:text-gray-300`}>
-        {/* Algolia 搜索模态框 */}
-        <AlgoliaSearchModal cRef={searchModal} {...props} />
 
         {/* 顶部导航栏 */}
         <Header {...props} />
@@ -93,14 +80,11 @@ const LayoutBase = props => {
           id='wrapper'
           className={`${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'flex-row-reverse' : ''} relative flex justify-between w-full gap-x-6 h-full mx-auto max-w-screen-4xl`}>
           {/* 左侧边栏，仅在非全宽模式下且为桌面端时显示 */}
-          {fullWidth ? null : (
+          {fullWidth || isHomePage ? null : (
             <div className={'hidden md:block relative z-10 '}>
               <div className='w-80 pt-14 pb-4 sticky top-0 h-screen flex justify-between flex-col'>
                 {/* 导航部分 */}
                 <div className='overflow-y-scroll scroll-hidden pt-10 pl-5'>
-                  {/* 左侧插槽，用于插入自定义内容 */}
-                  {slotLeft}
-
                   {/* 所有文章的导航列表 */}
                   <NavPostList filteredNavPages={filteredNavPages} {...props} />
                 </div>
@@ -111,17 +95,16 @@ const LayoutBase = props => {
           {/* 中间内容区域 */}
           <div
             id='center-wrapper'
-            className='flex flex-col justify-between w-full relative z-10 pt-14 min-h-screen'>
+            className='flex flex-col justify-between w-full relative z-10 min-h-screen'>
             <div
               id='container-inner'
-              className={`w-full ${fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0'} justify-center mx-auto`}>
-              {slotTop} {/* 顶部插槽 */}
+              className={`w-full justify-center mx-auto ${isHomePage ? '' : (fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0')}`}>
               {children} {/* 页面主要内容 */}
             </div>
           </div>
 
           {/* 右侧边栏，仅在非全宽模式下且为大屏幕桌面端（2xl）时显示 */}
-          {fullWidth ? null : (
+          {fullWidth || isHomePage ? null : (
             <div
               className={
                 'w-72 hidden 2xl:block dark:border-transparent flex-shrink-0 relative z-10 '
@@ -245,51 +228,11 @@ const LayoutSlug = props => {
   )
 }
 
-/**
- * 404 页面布局
- * @param {*} props
- * @returns {JSX.Element}
- */
-const Layout404 = props => {
-  const router = useRouter()
-  const { locale } = useGlobal() // 获取国际化语言文本
-  // useEffect 用于一个回退机制
-  useEffect(() => {
-    // 延迟3秒后，如果页面上还是没有文章内容，则强制返回首页
-    setTimeout(() => {
-      const article = isBrowser && document.getElementById('article-wrapper')
-      if (!article) {
-        router.push('/').then(() => {
-          // console.log('找不到页面', router.asPath)
-        })
-      }
-    }, 3000)
-  }, [])
-
-  return (
-    <>
-      {/* 居中显示的 404 提示信息 */}
-      <div className='md:-mt-20 text-black w-full h-screen text-center justify-center content-center items-center flex flex-col'>
-        <div className='dark:text-gray-200'>
-          <h2 className='inline-block border-r-2 border-gray-600 mr-2 px-3 py-2 align-top'>
-            <i className='mr-2 fas fa-spinner animate-spin' /> {/* 一个旋转的加载图标 */}
-            404
-          </h2>
-          <div className='inline-block text-left h-32 leading-10 items-center'>
-            <h2 className='m-0 p-0'>{locale.NAV.PAGE_NOT_FOUND_REDIRECT}</h2> {/* 显示 "页面未找到" 的文本 */}
-          </div>
-        </div>
-      </div>
-    </>
-  )
-}
-
-
 // 导出所有布局组件和主题配置
 export {
-  Layout404,
   LayoutBase,
   LayoutIndex,
   LayoutSlug,
+  Design,
   CONFIG as THEME_CONFIG
 }

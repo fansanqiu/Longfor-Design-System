@@ -12,3 +12,4 @@
 - When I run `yarn build`, I find an error on the page, fixing the problem
 - Tell me why?
 
+通过顶部导航进入设计页面，设计页面使用LayoutBase的布局、样式、功能
