@@ -4,7 +4,6 @@ import NotionPage from '@/components/NotionPage' // 导入 Notion 页面渲染�
 import { siteConfig } from '@/lib/config' // 导入网站配置
 import { useGlobal } from '@/lib/global' // 导入全局状态钩子
 import { isBrowser } from '@/lib/utils' // 导入判断是否在浏览器环境的工具函数
-import dynamic from 'next/dynamic' // 导入 Next.js 的动态导入功能，用于代码分割
 import Head from 'next/head' // 导入 Next.js 的 Head 组件，用于修改页面头部信息
 import { useRouter } from 'next/router' // 导入 Next.js 的路由钩子
 import { createContext, useContext, useEffect, useRef, useState } from 'react' // 导入 React 的核心钩子
@@ -78,7 +77,7 @@ const LayoutBase = props => {
 
         <main
           id='wrapper'
-          className={`${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'flex-row-reverse' : ''} relative flex justify-between w-full gap-x-6 h-full mx-auto max-w-screen-4xl`}>
+          className={`${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'flex-row-reverse' : ''} relative flex justify-between gap-x-6 h-full mx-auto w-full`}>
           {/* 左侧边栏，仅在非全宽模式下且为桌面端时显示 */}
           {fullWidth || isHomePage ? null : (
             <div className={'hidden md:block relative z-10 '}>
@@ -95,10 +94,10 @@ const LayoutBase = props => {
           {/* 中间内容区域 */}
           <div
             id='center-wrapper'
-            className='flex flex-col justify-between w-full relative z-10 min-h-screen'>
+            className={`flex flex-col justify-between w-full relative z-10 min-h-screen`}>
             <div
               id='container-inner'
-              className={`w-full justify-center mx-auto ${isHomePage ? '' : (fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0')}`}>
+              className={`w-full justify-center mx-auto ${isHomePage ? 'px-0' : (fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0')}`}>
               {children} {/* 页面主要内容 */}
             </div>
           </div>
@@ -111,7 +110,7 @@ const LayoutBase = props => {
               }>
               <div className='py-14 sticky top-0'>
                 {/* 文章信息，显示当前文章或公告的信息 */}
-                <ArticleInfo post={props?.post ? props?.post : props.notice} />
+                {/* <ArticleInfo post={props?.post ? props?.post : props.notice} /> */}
 
                 <div>
                   {/* 桌面端文章目录 */}
@@ -152,13 +151,13 @@ const LayoutIndex = props => {
 const LayoutSlug = props => {
   const { post, prev, next, siteInfo, lock, validPassword } = props // 从 props 解构数据
   const router = useRouter()
-  
+
   // 提前调用所有 siteConfig 以确保 React hook 的调用顺序在每次渲染时都保持一致
   const index = siteConfig('GITBOOK_INDEX_PAGE', 'about', CONFIG)
   const postTitleIcon = siteConfig('POST_TITLE_ICON')
   const postDetailCategory = siteConfig('POST_DETAIL_CATEGORY')
   const postDetailTag = siteConfig('POST_DETAIL_TAG')
-  
+
   // 如果当前文章是文档的首页，则修改浏览器标签页的标题格式
   const basePath = router.asPath.split('?')[0] // 获取不带查询参数的路径
   const title =

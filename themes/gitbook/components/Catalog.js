@@ -73,7 +73,7 @@ const Catalog = ({ post }) => {
 
       <div
         id='toc-wrapper'
-        className='toc-wrapper overflow-y-auto my-2 max-h-80 overscroll-none scroll-hidden'>
+        className='toc-wrapper overflow-y-auto my-2'>
         <nav className='h-full text-black'>
           {toc?.map(tocItem => {
             const id = uuidToId(tocItem.id)
@@ -82,7 +82,7 @@ const Catalog = ({ post }) => {
                 key={id}
                 href={`#${id}`}
                 //  notion-table-of-contents-item
-                className={`${activeSection === id && 'border-green-500 text-green-500 font-bold'} border-l pl-4 block hover:text-green-500 border-lduration-300 transform font-light dark:text-gray-300
+                className={`${activeSection === id && 'border-[#165DFF] text-[#165DFF] font-bold'} border-l pl-4 block hover:text-[#165DFF] border-lduration-300 transform font-light dark:text-gray-300
               notion-table-of-contents-item-indent-level-${tocItem.indentLevel} catalog-item `}>
                 <span
                   style={{
