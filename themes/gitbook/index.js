@@ -28,32 +28,25 @@ export const useGitBookGlobal = () => useContext(ThemeGlobalGitbook)
 
 /**
  * 基础布局组件
- * 采用左右两侧布局结构，在移动端则使用顶部和底部导航栏
- * @param {Object} props - 组件属性，包含 children, post, allNavPages 等
+ * 仅保留Header，其他内容移动到组件页面
+ * @param {Object} props - 组件属性
  * @returns {JSX.Element}
  * @constructor
  */
 const LayoutBase = props => {
-  // 从 props 中解构出所需的数据
   const {
-    children, // 子组件，即页面主要内容
-    allNavPages // 所有导航页面的数据
-  } = props
-  const { fullWidth } = useGlobal() // 从全局状态获取 fullWidth，判断是否为全宽布局
-  const router = useRouter()
-  const isHomePage = router.pathname === '/'
-  const [tocVisible, changeTocVisible] = useState(false) // 状态：目录是否可见（移动端）
-  const [pageNavVisible, changePageNavVisible] = useState(false) // 状态：页面导航是否可见（移动端）
-  const [filteredNavPages, setFilteredNavPages] = useState(allNavPages) // 状态：经过筛选（添加了 isLatest 标记）的导航页面
+    allNavPages = []
+  } = props;
+  
+  const [tocVisible, changeTocVisible] = useState(false);
+  const [pageNavVisible, changePageNavVisible] = useState(false);
+  const [filteredNavPages, setFilteredNavPages] = useState(allNavPages);
+  const searchModal = useRef(null);
 
-  const searchModal = useRef(null) // 创建一个 ref 用于引用搜索模态框组件
-
-  // 当 allNavPages 变化时，更新 filteredNavPages
   useEffect(() => {
-    setFilteredNavPages(allNavPages)
-  }, [allNavPages])
+    setFilteredNavPages(allNavPages);
+  }, [allNavPages]);
 
-  // 使用 Context.Provider 将共享的状态和方法传递给所有子组件
   return (
     <ThemeGlobalGitbook.Provider
       value={{
@@ -72,63 +65,13 @@ const LayoutBase = props => {
         id='theme-gitbook'
         className={`${siteConfig('FONT_STYLE')} pb-16 md:pb-0 scroll-smooth bg-white dark:bg-black w-full h-full min-h-screen justify-center dark:text-gray-300`}>
 
-        {/* 顶部导航栏 */}
+        {/* 仅保留顶部导航栏 */}
         <Header {...props} />
 
-        <main
-          id='wrapper'
-          className={`${siteConfig('LAYOUT_SIDEBAR_REVERSE') ? 'flex-row-reverse' : ''} relative flex justify-between gap-x-6 h-full mx-auto w-full`}>
-          {/* 左侧边栏，仅在非全宽模式下且为桌面端时显示 */}
-          {fullWidth || isHomePage ? null : (
-            <div className={'hidden md:block relative z-10 '}>
-              <div className='w-80 pt-14 pb-4 sticky top-0 h-screen flex justify-between flex-col'>
-                {/* 导航部分 */}
-                <div className='overflow-y-scroll scroll-hidden pt-10 pl-5'>
-                  {/* 所有文章的导航列表 */}
-                  <NavPostList filteredNavPages={filteredNavPages} {...props} />
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* 中间内容区域 */}
-          <div
-            id='center-wrapper'
-            className={`flex flex-col justify-between w-full relative z-10 min-h-screen`}>
-            <div
-              id='container-inner'
-              className={`w-full justify-center mx-auto ${isHomePage ? 'px-0' : (fullWidth ? 'px-5' : 'max-w-3xl px-3 lg:px-0')}`}>
-              {children} {/* 页面主要内容 */}
-            </div>
-          </div>
-
-          {/* 右侧边栏，仅在非全宽模式下且为大屏幕桌面端（2xl）时显示 */}
-          {fullWidth || isHomePage ? null : (
-            <div
-              className={
-                'w-72 hidden 2xl:block dark:border-transparent flex-shrink-0 relative z-10 '
-              }>
-              <div className='py-14 sticky top-0'>
-                {/* 文章信息，显示当前文章或公告的信息 */}
-                {/* <ArticleInfo post={props?.post ? props?.post : props.notice} /> */}
-
-                <div>
-                  {/* 桌面端文章目录 */}
-                  <Catalog {...props} />
-                </div>
-              </div>
-            </div>
-          )}
+        {/* 主要内容区域 - 仅渲染子组件 */}
+        <main className="w-full">
+          {props.children}
         </main>
-
-        {/* 返回顶部按钮 */}
-        <JumpToTopButton />
-
-        {/* 移动端导航抽屉（从左侧滑出） */}
-        <PageNavDrawer {...props} filteredNavPages={filteredNavPages} />
-
-        {/* 移动端底部菜单栏 */}
-        <BottomMenuBar {...props} />
       </div>
     </ThemeGlobalGitbook.Provider>
   )

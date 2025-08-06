@@ -2,9 +2,8 @@ import React from 'react';
 
 const Design = () => {
   return (
-    <div>
-      <h1>Design Page</h1>
-      <p>This is the design component.</p>
+    <div className="w-full flex justify-center items-center min-h-screen">
+      <h1 className="text-3xl font-bold">设计页面</h1>
     </div>
   );
 };
