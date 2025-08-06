@@ -127,15 +127,13 @@ const NotionPage = ({ post, className }) => {
         components={{
           Code,
           Collection,
-          Equation,
+
           Modal,
-          Pdf,
           Tweet
         }}
       />
 
-      <AdEmbed />
-      <PrismMac />
+
     </div>
   )
 }
@@ -234,32 +232,9 @@ const Code = dynamic(
   { ssr: false }
 )
 
-// 公式
-const Equation = dynamic(
-  () =>
-    import('@/components/Equation').then(async m => {
-      // 化学方程式
-      await import('@/lib/plugins/mhchem')
-      return m.Equation
-    }),
-  { ssr: false }
-)
 
-// 原版文档
-// const Pdf = dynamic(
-//   () => import('react-notion-x/build/third-party/pdf').then(m => m.Pdf),
-//   {
-//     ssr: false
-//   }
-// )
-const Pdf = dynamic(() => import('@/components/Pdf').then(m => m.Pdf), {
-  ssr: false
-})
 
-// 美化代码 from: https://github.com/txs
-const PrismMac = dynamic(() => import('@/components/PrismMac'), {
-  ssr: false
-})
+
 
 /**
  * tweet嵌入
@@ -268,13 +243,7 @@ const TweetEmbed = dynamic(() => import('react-tweet-embed'), {
   ssr: false
 })
 
-/**
- * 文内google广告
- */
-const AdEmbed = dynamic(
-  () => import('@/components/GoogleAdsense').then(m => m.AdEmbed),
-  { ssr: true }
-)
+
 
 const Collection = dynamic(
   () =>

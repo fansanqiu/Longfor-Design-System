@@ -1,4 +1,3 @@
-import Badge from '@/components/Badge'
 import NotionIcon from '@/components/NotionIcon'
 import { siteConfig } from '@/lib/config'
 import Link from 'next/link'
@@ -18,7 +17,7 @@ const BlogPostCard = ({ post, className }) => {
   }, [router.asPath, router.isReady, post])
 
   const showPostIcon = siteConfig('POST_TITLE_ICON')
-  const showBadge = post?.isLatest && siteConfig('GITBOOK_LATEST_POST_RED_BADGE')
+
 
   return (
     <Link href={post?.href} passHref>
@@ -32,10 +31,7 @@ const BlogPostCard = ({ post, className }) => {
           )}{' '}
           {post.title}
         </div>
-        {/* 最新文章加个红点 */}
-        {showBadge && (
-          <Badge />
-        )}
+
       </div>
     </Link>
   )

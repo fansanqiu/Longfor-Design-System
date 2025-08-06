@@ -1,4 +1,3 @@
-import Badge from '@/components/Badge'
 import Collapse from '@/components/Collapse'
 import { siteConfig } from '@/lib/config'
 import { useGlobal } from '@/lib/global'
@@ -63,9 +62,7 @@ const NavPostItem = props => {
             <i
               className={`px-2 fas fa-chevron-left transition-all opacity-50 duration-700 ${expanded ? '-rotate-90' : ''}`}></i>
           </div>
-          {groupHasLatest &&
-            siteConfig('GITBOOK_LATEST_POST_RED_BADGE') &&
-            !expanded && <Badge />}
+
         </div>
         <Collapse isOpen={expanded} onHeightChange={props.onHeightChange}>
           {group?.items?.map((post, index) => (

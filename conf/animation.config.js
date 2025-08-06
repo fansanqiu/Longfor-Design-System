@@ -4,13 +4,16 @@
 module.exports = {
   // 鼠标点击烟花特效
   FIREWORKS: process.env.NEXT_PUBLIC_FIREWORKS || false, // 开关
-  // 烟花色彩，感谢 https://github.com/Vixcity 提交的色彩
   FIREWORKS_COLOR: [
-    '255, 20, 97',
-    '24, 255, 146',
-    '90, 135, 255',
-    '251, 243, 140'
-  ],
+    '255, 255, 224',
+    '207, 46, 46',
+    '79, 172, 254',
+    '22, 200, 163',
+    '255, 105, 180',
+    '147, 51, 234',
+    '249, 115, 22',
+    '74, 222, 128'
+  ], // 颜色数组，每个元素格式为 R,G,B，例如：255,0,0
 
   // 鼠标跟随特效
   MOUSE_FOLLOW: process.env.NEXT_PUBLIC_MOUSE_FOLLOW || false, // 开关

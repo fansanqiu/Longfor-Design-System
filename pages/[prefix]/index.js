@@ -1,11 +1,10 @@
 import BLOG from '@/blog.config'
-import useNotification from '@/components/Notification'
-import OpenWrite from '@/components/OpenWrite'
+
 import { siteConfig } from '@/lib/config'
 import { getGlobalData, getPost } from '@/lib/db/getSiteData'
 import { useGlobal } from '@/lib/global'
 import { getPageTableOfContents } from '@/lib/notion/getPageTableOfContents'
-import { getPasswordQuery } from '@/lib/password'
+
 import { checkSlugHasNoSlash, processPostData } from '@/lib/utils/post'
 import { DynamicLayout } from '@/themes/theme'
 import md5 from 'js-md5'
@@ -26,7 +25,7 @@ const Slug = props => {
 
   // 文章锁🔐
   const [lock, setLock] = useState(post?.password && post?.password !== '')
-  const { showNotification, Notification } = useNotification()
+ 
 
   /**
    * 验证文章密码
@@ -56,15 +55,7 @@ const Slug = props => {
       setLock(false)
     }
 
-    // 读取上次记录 自动提交密码
-    const passInputs = getPasswordQuery(router.asPath)
-    if (passInputs.length > 0) {
-      for (const passInput of passInputs) {
-        if (validPassword(passInput)) {
-          break // 密码验证成功，停止尝试
-        }
-      }
-    }
+
   }, [post])
 
   // 文章加载
@@ -89,8 +80,6 @@ const Slug = props => {
       <DynamicLayout theme={theme} layoutName='LayoutSlug' {...props} />
       {/* 解锁密码提示框 */}
       {post?.password && post?.password !== '' && !lock && <Notification />}
-      {/* 导流工具 */}
-      <OpenWrite />
     </>
   )
 }

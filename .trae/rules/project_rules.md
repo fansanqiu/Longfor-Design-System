@@ -1,2 +1,1 @@
-1. 使用 NextJS 框架
-2. 使用 TailWindCSS 进行样式开发
+- 每次完成任务后，基于最新的项目目录更新 File Tree Documentation.md 文档

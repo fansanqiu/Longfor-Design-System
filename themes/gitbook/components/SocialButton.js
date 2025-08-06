@@ -1,4 +1,3 @@
-import QrCode from '@/components/QrCode'
 import { siteConfig } from '@/lib/config'
 import { useState } from 'react'
 
@@ -23,14 +22,6 @@ const SocialButton = () => {
   const CONTACT_XIAOHONGSHU = siteConfig('CONTACT_XIAOHONGSHU')
   const CONTACT_ZHISHIXINGQIU = siteConfig('CONTACT_ZHISHIXINGQIU')
   const CONTACT_WEHCHAT_PUBLIC = siteConfig('CONTACT_WEHCHAT_PUBLIC')
-  const [qrCodeShow, setQrCodeShow] = useState(false)
-
-  const openPopover = () => {
-    setQrCodeShow(true)
-  }
-  const closePopover = () => {
-    setQrCodeShow(false)
-  }
 
   return (
     <div className='w-full justify-center flex-wrap flex'>
@@ -155,27 +146,13 @@ const SocialButton = () => {
           </a>
         )}
         {CONTACT_WEHCHAT_PUBLIC && (
-          <button
-            onMouseEnter={openPopover}
-            onMouseLeave={closePopover}
-            aria-label={'微信公众号'}>
-            <div id='wechat-button'>
-              <i className='transform scale-105 hover:scale-125 duration-150 fab fa-weixin  dark:hover:text-green-400 hover:text-green-600' />
-            </div>
-            {/* 二维码弹框 */}
-            <div className='absolute'>
-              <div
-                id='pop'
-                className={
-                  (qrCodeShow ? 'opacity-100 ' : ' invisible opacity-0') +
-                  ' z-40 absolute bottom-10 -left-10 bg-white shadow-xl transition-all duration-200 text-center'
-                }>
-                <div className='p-2 mt-1 w-28 h-28'>
-                  {qrCodeShow && <QrCode value={CONTACT_WEHCHAT_PUBLIC} />}
-                </div>
-              </div>
-            </div>
-          </button>
+          <a
+            target='_blank'
+            rel='noreferrer'
+            title={'微信公众号'}
+            href={CONTACT_WEHCHAT_PUBLIC}>
+            <i className='transform hover:scale-125 duration-150 fab fa-weixin dark:hover:text-green-400 hover:text-green-600' />
+          </a>
         )}
       </div>
     </div>

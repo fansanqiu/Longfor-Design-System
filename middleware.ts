@@ -9,7 +9,7 @@ import BLOG from './blog.config'
  */
 export const config = {
   // 这里设置白名单，防止静态资源被拦截
-  matcher: ['/((?!.*\\..*|_next|/sign-in|/auth).*)', '/', '/(api|trpc)(.*)']
+  matcher: ['/((?!.*\..*|_next|/auth).*)', '/', '/(api|trpc)(.*)']
 }
 
 // 限制登录访问的路由
@@ -69,8 +69,8 @@ const authMiddleware = process.env.NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY
       // 处理 /dashboard 路由的登录保护
       if (isTenantRoute(req)) {
         if (!userId) {
-          // 用户未登录，重定向到 /sign-in
-          const url = new URL('/sign-in', req.url)
+          // 用户未登录，重定向到首页
+          const url = new URL('/', req.url)
           url.searchParams.set('redirectTo', req.url) // 保存重定向目标
           return NextResponse.redirect(url)
         }
