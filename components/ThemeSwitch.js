@@ -4,7 +4,7 @@ import { THEMES } from '@/themes/theme'
 import { useRouter } from 'next/router'
 import { useState } from 'react'
 import DarkModeButton from './DarkModeButton'
-import { Draggable } from './Draggable'
+
 import LazyImage from './LazyImage'
 import SideBarDrawer from './SideBarDrawer'
 /**
@@ -26,42 +26,40 @@ const ThemeSwitch = () => {
   return (
     <>
       {/* 悬浮的主题切换按钮 */}
-      <Draggable stick={true}>
-        <div
-          id='draggableBox'
-          style={{ left: '0px', top: '80vh' }}
-          className='border dark:border-gray-600 fixed group flex flex-col items-start space-y-2 overflow-hidden z-20 p-3
-                    dark:text-white bg-white dark:bg-black 
-                      rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl   '>
-          {/* 主题切换按钮 */}
-          <div className='text-sm flex items-center group-hover:w-44 h-4 text-center duration-200'>
-            <i
-              className='cursor-pointer fa-solid fa-palette w-5 '
+      <div
+        id='themeSwitchBox'
+        style={{ left: '0px', top: '80vh' }}
+        className='border dark:border-gray-600 fixed group flex flex-col items-start space-y-2 overflow-hidden z-20 p-3
+                  dark:text-white bg-white dark:bg-black 
+                    rounded-xl shadow-lg hover:scale-105 hover:shadow-2xl   '>
+        {/* 主题切换按钮 */}
+        <div className='text-sm flex items-center group-hover:w-44 h-4 text-center duration-200'>
+          <i
+            className='cursor-pointer fa-solid fa-palette w-5 '
+            onClick={() => {
+              setSideBarVisible(true)
+            }}
+            onTouchStart={() => {
+              setSideBarVisible(true)
+            }}
+          />
+          <div className='w-0 group-hover:w-32 duration-200 overflow-hidden'>
+            <label htmlFor='themeSelect' className='sr-only'>
+              {locale.COMMON.THEME}
+            </label>
+            {/* 点击弹出主题切换面板 */}
+            <div
               onClick={() => {
                 setSideBarVisible(true)
               }}
-              onTouchStart={() => {
-                setSideBarVisible(true)
-              }}
-            />
-            <div className='w-0 group-hover:w-32 duration-200 overflow-hidden'>
-              <label htmlFor='themeSelect' className='sr-only'>
-                {locale.COMMON.THEME}
-              </label>
-              {/* 点击弹出主题切换面板 */}
-              <div
-                onClick={() => {
-                  setSideBarVisible(true)
-                }}
-                className='uppercase cursor-pointer'
-                title='Click To Switch Theme'
-                alt='Click To Switch Theme'>
-                {currentTheme}
-              </div>
+              className='uppercase cursor-pointer'
+              title='Click To Switch Theme'
+              alt='Click To Switch Theme'>
+              {currentTheme}
             </div>
           </div>
         </div>
-      </Draggable>
+      </div>
 
       <SideBarDrawer
         className='p-10 max-w-3xl 2xl:max-w-5xl dark:text-white bg-white dark:bg-black '

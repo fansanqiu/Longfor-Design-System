@@ -9,7 +9,7 @@ import { initGoogleAdsense } from './GoogleAdsense'
 
 import Head from 'next/head'
 import ExternalScript from './ExternalScript'
-import WebWhiz from './Webwhiz'
+
 import { useGlobal } from '@/lib/global'
 import IconFont from './IconFont'
 
@@ -209,10 +209,10 @@ const ExternalPlugin = props => {
       {DIFY_CHATBOT_ENABLED && <DifyChatbot />}
       {CUSTOM_RIGHT_CLICK_CONTEXT_MENU && <CustomContextMenu {...props} />}
       {!CAN_COPY && <DisableCopy />}
-      {WEB_WHIZ_ENABLED && <WebWhiz />}
+      
       {AD_WWADS_BLOCK_DETECT && <AdBlockDetect />}
       {TIANLI_KEY && <TianliGPT />}
-      <VConsole />
+
       {ENABLE_NPROGRSS && <LoadingProgress />}
       <AosAnimation />
       {ANALYTICS_51LA_ID && ANALYTICS_51LA_CK && <LA51 />}
@@ -442,10 +442,7 @@ const ExternalPlugin = props => {
   )
 }
 
-const TwikooCommentCounter = dynamic(
-  () => import('@/components/TwikooCommentCounter'),
-  { ssr: false }
-)
+
 const DebugPanel = dynamic(() => import('@/components/DebugPanel'), {
   ssr: false
 })
@@ -455,19 +452,15 @@ const ThemeSwitch = dynamic(() => import('@/components/ThemeSwitch'), {
 const Fireworks = dynamic(() => import('@/components/Fireworks'), {
   ssr: false
 })
-const MouseFollow = dynamic(() => import('@/components/MouseFollow'), {
-  ssr: false
-})
-const Nest = dynamic(() => import('@/components/Nest'), { ssr: false })
+
+
 const FlutteringRibbon = dynamic(
   () => import('@/components/FlutteringRibbon'),
   { ssr: false }
 )
-const Ribbon = dynamic(() => import('@/components/Ribbon'), { ssr: false })
-const Sakura = dynamic(() => import('@/components/Sakura'), { ssr: false })
-const StarrySky = dynamic(() => import('@/components/StarrySky'), {
-  ssr: false
-})
+
+
+
 const DifyChatbot = dynamic(() => import('@/components/DifyChatbot'), {
   ssr: false
 })
@@ -478,14 +471,14 @@ const Analytics = dynamic(
     }),
   { ssr: false }
 )
-const MusicPlayer = dynamic(() => import('@/components/Player'), { ssr: false })
+
 const Ackee = dynamic(() => import('@/components/Ackee'), { ssr: false })
 const Gtag = dynamic(() => import('@/components/Gtag'), { ssr: false })
 const Busuanzi = dynamic(() => import('@/components/Busuanzi'), { ssr: false })
 const Messenger = dynamic(() => import('@/components/FacebookMessenger'), {
   ssr: false
 })
-const VConsole = dynamic(() => import('@/components/VConsole'), { ssr: false })
+
 const CustomContextMenu = dynamic(
   () => import('@/components/CustomContextMenu'),
   { ssr: false }
