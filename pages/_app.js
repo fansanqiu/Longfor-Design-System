@@ -10,7 +10,7 @@ import useAdjustStyle from '@/hooks/useAdjustStyle'
 import { GlobalContextProvider } from '@/lib/global'
 import { getBaseLayoutByTheme } from '@/themes/theme'
 import { useRouter } from 'next/router'
-import { useCallback, useMemo } from 'react'
+import { useCallback, useMemo, useEffect } from 'react'
 import { getQueryParam } from '../lib/utils'
 
 // 添加React hydration配置
@@ -44,6 +44,32 @@ const MyApp = ({ Component, pageProps }) => {
       BLOG.THEME
     )
   }, [route])
+
+  // 处理路由切换时的页面加载问题
+  useEffect(() => {
+    const handleRouteChangeStart = (url) => {
+      // 确保页面在路由切换时能够正确加载
+      if (typeof window !== 'undefined') {
+        window.scrollTo(0, 0)
+      }
+    }
+
+    const handleRouteChangeComplete = (url) => {
+      // 确保页面内容正确渲染
+      if (typeof window !== 'undefined') {
+        // 强制重新计算布局
+        window.dispatchEvent(new Event('resize'))
+      }
+    }
+
+    route.events.on('routeChangeStart', handleRouteChangeStart)
+    route.events.on('routeChangeComplete', handleRouteChangeComplete)
+
+    return () => {
+      route.events.off('routeChangeStart', handleRouteChangeStart)
+      route.events.off('routeChangeComplete', handleRouteChangeComplete)
+    }
+  }, [route.events])
 
   // 整体布局
   const GLayout = useCallback(

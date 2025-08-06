@@ -38,13 +38,21 @@ const Header = props => {
 
           {/* 其它页面 */}
           <div className='flex items-center gap-5'>
-            <Link href="/design" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>设计</Link>
+            <Link href="/design" passHref legacyBehavior>
+              <a className="text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:'PingFang_SC'] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold">设计</a>
+            </Link>
 
-            <Link href="/components" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>组件</Link>
+            <Link href="/components" passHref legacyBehavior>
+              <a className="text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:'PingFang_SC'] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold">组件</a>
+            </Link>
 
-            <Link href="/resource" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>资源</Link>
+            <Link href="/resource" passHref legacyBehavior>
+              <a className="text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:'PingFang_SC'] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold">资源</a>
+            </Link>
 
-            <Link href="/experience" className={` text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:"PingFang_SC"] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold`}>体验</Link>
+            <Link href="/experience" passHref legacyBehavior>
+              <a className="text-[color:var(--Grey04,#6F6F6F)] text-center [font-family:'PingFang_SC'] text-sm font-normal leading-[22px] hover:text-[#165DFF] hover:opacity-100 hover:font-semibold">体验</a>
+            </Link>
           </div>
         </div>
       </div>

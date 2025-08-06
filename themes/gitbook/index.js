@@ -112,7 +112,12 @@ const LayoutSlug = props => {
   // useEffect 用于处理文章不存在的情况
   useEffect(() => {
     // 如果 post 数据为空，则可能是 404 页面
-    if (!post) {
+    // 但是排除设计系统相关页面，这些页面不需要Notion文章数据
+    const excludePaths = ['/design', '/components', '/resource', '/experience']
+    const currentPath = router.asPath.split('?')[0]
+    const shouldSkip404Check = excludePaths.some(path => currentPath.startsWith(path))
+    
+    if (!post && !shouldSkip404Check) {
       // 延迟一段时间后检查
       setTimeout(() => {
         if (isBrowser) {
@@ -128,7 +133,7 @@ const LayoutSlug = props => {
         }
       }, waiting404)
     }
-  }, [post]) // 依赖于 post 对象
+  }, [post, router.asPath]) // 依赖于 post 对象和路由路径
 
   return (
     <>
