@@ -13,3 +13,9 @@
 - Tell me why?
 
 通过顶部导航进入设计页面，设计页面使用LayoutBase的布局、样式、功能
+
+
+- 点击顶部的组件时跳转到组件页，组件页和设计页一样
+
+- 点击 @themes/gitbook/components/Header.js 的资源、体验时分别跳转到资源页和体验页，页面内容为空
+
