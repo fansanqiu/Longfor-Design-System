@@ -29,7 +29,7 @@ export default function BottomMenuBar({ post, className }) {
           className='inline-flex flex-col items-center justify-center px-5 border-gray-200 border-x hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600'>
           <i className='fa-book fas w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-500' />
           <span className='text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-500'>
-            {locale.COMMON.ARTICLE_LIST}
+            {locale?.COMMON?.ARTICLE_LIST || 'Article List'}
           </span>
         </button>
 
@@ -40,7 +40,7 @@ export default function BottomMenuBar({ post, className }) {
             className='inline-flex flex-col items-center justify-center px-5 border-gray-200 border-x hover:bg-gray-50 dark:hover:bg-gray-800 group dark:border-gray-600'>
             <i className='fa-list-ol fas w-5 h-5 mb-2 text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-500' />
             <span className='text-sm text-gray-500 dark:text-gray-400 group-hover:text-gray-600 dark:group-hover:text-gray-500'>
-              {locale.COMMON.TABLE_OF_CONTENTS}
+              {locale?.COMMON?.TABLE_OF_CONTENTS || 'Table of Contents'}
             </span>
           </button>
         )}

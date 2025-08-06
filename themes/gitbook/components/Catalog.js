@@ -68,7 +68,7 @@ const Catalog = ({ post }) => {
   return (
     <>
       {/* <div className='w-full hidden md:block'>
-        <i className='mr-1 fas fa-stream' />{locale.COMMON.TABLE_OF_CONTENTS}
+        <i className='mr-1 fas fa-stream' />{locale?.COMMON?.TABLE_OF_CONTENTS || 'Table of Contents'}
         </div> */}
 
       <div

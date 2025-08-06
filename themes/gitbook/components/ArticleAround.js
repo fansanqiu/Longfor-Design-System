@@ -21,7 +21,7 @@ export default function ArticleAround({ prev, next }) {
         className='rounded border w-full h-20 px-3 cursor-pointer justify-between items-center flex hover:text-green-500 duration-300'>
         <i className='mr-1 fas fa-angle-left' />
         <div>
-          <div>{locale.COMMON.PREV_POST}</div>
+          <div>{locale?.COMMON?.PREV_POST || 'Previous Post'}</div>
           <div>{prev.title}</div>
         </div>
       </Link>
@@ -31,7 +31,7 @@ export default function ArticleAround({ prev, next }) {
         passHref
         className='rounded border w-full h-20 px-3 cursor-pointer justify-between items-center flex hover:text-green-500 duration-300'>
         <div>
-          <div>{locale.COMMON.NEXT_POST}</div>
+          <div>{locale?.COMMON?.NEXT_POST || 'Next Post'}</div>
           <div> {next.title}</div>
         </div>
         <i className='ml-1 my-1 fas fa-angle-right' />

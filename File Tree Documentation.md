@@ -14,7 +14,11 @@ Longfor-Design-System/
 ├── 📄 .npmrc                     # NPM 配置文件
 ├── 📄 .nvmrc                     # Node.js 版本管理
 ├── 📄 .prettierrc.json           # Prettier 代码格式化配置
+├── 📄 .trae\                    # Trae IDE 配置
+│   └── 📁 rules\                # 项目规则目录
+│       └── 📄 project_rules.md # 项目规则文件
 ├── 📄 Dockerfile                 # Docker 容器配置
+├── 📄 File Tree Documentation.md # 项目文件树文档
 ├── 📄 LICENSE                    # 项目许可证
 ├── 📄 README.md                  # 项目说明文档
 ├── 📄 SECURITY.md                # 安全策略文档

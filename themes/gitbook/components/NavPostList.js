@@ -76,7 +76,7 @@ const NavPostList = props => {
     return (
       <div className='flex w-full items-center justify-center min-h-screen mx-auto md:-mt-20'>
         <p className='text-gray-500 dark:text-gray-300'>
-          {locale.COMMON.NO_RESULTS_FOUND}{' '}
+          {locale?.COMMON?.NO_RESULTS_FOUND || 'No results found'}{' '}
           {currentSearch && <div>{currentSearch}</div>}
         </p>
       </div>

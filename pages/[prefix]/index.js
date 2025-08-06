@@ -40,7 +40,7 @@ const Slug = props => {
       setLock(false)
       // 输入密码存入localStorage，下次自动提交
       localStorage.setItem('password_' + router.asPath, passInput)
-      showNotification(locale.COMMON.ARTICLE_UNLOCK_TIPS) // 设置解锁成功提示显示
+      showNotification(locale?.COMMON?.ARTICLE_UNLOCK_TIPS || 'Article unlocked successfully') // 设置解锁成功提示显示
       return true
     }
     return false

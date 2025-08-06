@@ -37,7 +37,7 @@ const CatalogDrawerWrapper = ({ post, cRef }) => {
           {post && (
             <>
               <div className='px-4 pb-2 flex justify-between items-center border-b font-bold'>
-                <span>{locale.COMMON.TABLE_OF_CONTENTS}</span>
+                <span>{locale?.COMMON?.TABLE_OF_CONTENTS || 'Table of Contents'}</span>
                 <i
                   className='fas fa-times p-1 cursor-pointer'
                   onClick={() => {
