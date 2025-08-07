@@ -22,8 +22,8 @@ export async function getStaticProps() {
 
 export default function DesignPage(props) {
   return (
-    <LayoutBase {...props}>
-      <Design {...props} />
-    </LayoutBase>
+    // <LayoutBase {...props}>
+    <Design {...props} />
+    // </LayoutBase>
   )
 }

@@ -40,7 +40,7 @@ const DebugPanel = () => {
   function filterResult(text) {
     switch (text) {
       case 'true':
-        return <span className='text-green-500'>true</span>
+        return <span className='text-[#165DFF]'>true</span>
       case 'false':
         return <span className='text-red-500'>false</span>
       case '':

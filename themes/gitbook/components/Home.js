@@ -1,6 +1,8 @@
 // 禁用 eslint 的 no-unreachable 规则，因为文件中可能存在不可达代码
 /* eslint-disable no-unreachable */
 
+import  Header  from "./Header"
+
 const Home = props => {
 
     // 返回 JSX 元素
